@@ -67,7 +67,8 @@ export interface Config {
   blocks: {};
   collections: {
     users: User;
-    media: Media;
+    coin: Coin;
+    trade: Trade;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
@@ -75,7 +76,8 @@ export interface Config {
   collectionsJoins: {};
   collectionsSelect: {
     users: UsersSelect<false> | UsersSelect<true>;
-    media: MediaSelect<false> | MediaSelect<true>;
+    coin: CoinSelect<false> | CoinSelect<true>;
+    trade: TradeSelect<false> | TradeSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
@@ -131,22 +133,27 @@ export interface User {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "media".
+ * via the `definition` "coin".
  */
-export interface Media {
+export interface Coin {
   id: number;
-  alt: string;
+  coin: string;
   updatedAt: string;
   createdAt: string;
-  url?: string | null;
-  thumbnailURL?: string | null;
-  filename?: string | null;
-  mimeType?: string | null;
-  filesize?: number | null;
-  width?: number | null;
-  height?: number | null;
-  focalX?: number | null;
-  focalY?: number | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "trade".
+ */
+export interface Trade {
+  id: number;
+  tradeDate: string;
+  coinIn: number | Coin;
+  amountIn: number;
+  coinOut: number | Coin;
+  amountOut: number;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -160,8 +167,12 @@ export interface PayloadLockedDocument {
         value: number | User;
       } | null)
     | ({
-        relationTo: 'media';
-        value: number | Media;
+        relationTo: 'coin';
+        value: number | Coin;
+      } | null)
+    | ({
+        relationTo: 'trade';
+        value: number | Trade;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -222,21 +233,25 @@ export interface UsersSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "media_select".
+ * via the `definition` "coin_select".
  */
-export interface MediaSelect<T extends boolean = true> {
-  alt?: T;
+export interface CoinSelect<T extends boolean = true> {
+  coin?: T;
   updatedAt?: T;
   createdAt?: T;
-  url?: T;
-  thumbnailURL?: T;
-  filename?: T;
-  mimeType?: T;
-  filesize?: T;
-  width?: T;
-  height?: T;
-  focalX?: T;
-  focalY?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "trade_select".
+ */
+export interface TradeSelect<T extends boolean = true> {
+  tradeDate?: T;
+  coinIn?: T;
+  amountIn?: T;
+  coinOut?: T;
+  amountOut?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
