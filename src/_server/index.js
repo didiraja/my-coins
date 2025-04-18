@@ -1,5 +1,13 @@
 ;(async () => {
-  const data = []
+  const data = [
+    /* {
+      tradeDate: '2024-04-19T03:00:00.000Z',
+      coinIn: 8,
+      amountIn: 2662.35,
+      coinOut: 1,
+      amountOut: 0.00761049,
+    } */
+  ]
 
   const endpoint = 'http://localhost:3000/api/trade'
 
