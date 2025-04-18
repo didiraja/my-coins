@@ -1,19 +1,21 @@
-import { headers as getHeaders } from 'next/headers.js'
 import Image from 'next/image'
 import { getPayload } from 'payload'
 import React from 'react'
-import { fileURLToPath } from 'url'
-
 import config from '@/payload.config'
 import './styles.css'
+import { Coin } from '@/payload-types'
 
 export default async function HomePage() {
-  const headers = await getHeaders()
   const payloadConfig = await config
   const payload = await getPayload({ config: payloadConfig })
-  const { user } = await payload.auth({ headers })
 
-  const fileURL = `vscode://file/${fileURLToPath(import.meta.url)}`
+  const result = await payload.find({
+    collection: 'trade',
+  })
+
+  // if (typeof window !== 'undefined') {
+  //   console.log(result)
+  // }
 
   return (
     <div className="home">
@@ -39,11 +41,23 @@ export default async function HomePage() {
           </a>
         </div>
       </div>
+      <div className="list">
+        <ul>
+          {result.docs.map((trade) => {
+            return (
+              <li key={trade.id}>
+                {trade.tradeDate} - {(trade.coinIn as Coin).coin}: {trade.amountIn} -{' '}
+                {(trade.coinOut as Coin).coin}: {trade.amountOut}
+              </li>
+            )
+          })}
+        </ul>
+      </div>
       <div className="footer">
-        <p>Update this page by editing</p>
+        {/* <p>Update this page by editing</p>
         <a className="codeLink" href={fileURL}>
           <code>app/(frontend)/page.tsx</code>
-        </a>
+        </a> */}
       </div>
     </div>
   )
