@@ -4,6 +4,7 @@ import React from 'react'
 import config from '@/payload.config'
 import './styles.css'
 import { Coin } from '@/payload-types'
+import { showReadableDate } from '@/libs/format'
 
 export default async function HomePage() {
   const payloadConfig = await config
@@ -11,6 +12,7 @@ export default async function HomePage() {
 
   const result = await payload.find({
     collection: 'trade',
+    sort: '-tradeDate',
   })
 
   // if (typeof window !== 'undefined') {
@@ -46,8 +48,8 @@ export default async function HomePage() {
           {result.docs.map((trade) => {
             return (
               <li key={trade.id}>
-                {trade.tradeDate} - {(trade.coinIn as Coin).coin}: {trade.amountIn} -{' '}
-                {(trade.coinOut as Coin).coin}: {trade.amountOut}
+                {showReadableDate(trade.tradeDate)} - {(trade.coinIn as Coin).coin}:{' '}
+                {trade.amountIn} - {(trade.coinOut as Coin).coin}: {trade.amountOut}
               </li>
             )
           })}
