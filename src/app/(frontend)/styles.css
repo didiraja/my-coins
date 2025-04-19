@@ -9,6 +9,7 @@ html {
   background: black;
   -webkit-font-smoothing: antialiased;
   color: white;
+  padding: 1rem;
 }
 
 h1 {
@@ -35,7 +36,17 @@ h1 {
 }
 
 a {
-  text-decoration: none;
+  color: white;
+  text-decoration: underline;
   padding: 0.25rem 0.5rem;
   border-radius: 4px;
+
+  &:hover {
+    text-decoration: none;
+  }
+}
+
+.content {
+  display: flex;
+  align-items: baseline;
 }
