@@ -46,6 +46,17 @@ export default buildConfig({
       path: '/dashboard',
       method: 'get',
       handler: async (req) => {
+        const secretToken = req.headers.get('x-secret-token')
+
+        if (!secretToken || secretToken !== process.env.PAYLOAD_SECRET) {
+          return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+            status: 401,
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          })
+        }
+
         const querySumBRLIn = await req.payload.db.drizzle
           .select({
             result: sum(trade.amountIn),

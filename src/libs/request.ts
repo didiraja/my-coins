@@ -42,9 +42,9 @@ export const GetDashValues = async () => {
     const response: AxiosResponse<IDashEndpoint> = await axios.get(
       'http://localhost:3000/api/dashboard',
       {
-        // headers: {
-        //   'x-cg-demo-api-key': process.env.API_TOKEN,
-        // },
+        headers: {
+          'x-secret-token': process.env.PAYLOAD_SECRET,
+        },
       },
     )
 
