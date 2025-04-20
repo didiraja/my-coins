@@ -1,5 +1,5 @@
 // storage-adapter-import-placeholder
-import { sqliteAdapter } from '@payloadcms/db-sqlite'
+import { sql, sqliteAdapter } from '@payloadcms/db-sqlite'
 import { payloadCloudPlugin } from '@payloadcms/payload-cloud'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import path from 'path'
@@ -10,6 +10,8 @@ import sharp from 'sharp'
 import { Users } from './collections/Users'
 import { Coin } from './collections/Coin'
 import { Trade } from './collections/Trade'
+import { trade } from './payload-generated-schema'
+import { eq, sum } from '@payloadcms/db-sqlite/drizzle'
 // import { Media } from './collections/Media'
 
 const filename = fileURLToPath(import.meta.url)
@@ -38,5 +40,82 @@ export default buildConfig({
   plugins: [
     payloadCloudPlugin(),
     // storage-adapter-placeholder
+  ],
+  endpoints: [
+    {
+      path: '/dashboard',
+      method: 'get',
+      handler: async (req) => {
+        const querySumBRLIn = await req.payload.db.drizzle
+          .select({
+            result: sum(trade.amountIn),
+          })
+          .from(trade)
+          .where(eq(trade.coinIn, 8))
+
+        const querySumBRLOut = await req.payload.db.drizzle
+          .select({
+            result: sum(trade.amountOut),
+          })
+          .from(trade)
+          .where(eq(trade.coinOut, 8))
+
+        const querySumBTCIn = await req.payload.db.drizzle
+          .select({
+            result: sum(trade.amountIn),
+          })
+          .from(trade)
+          .where(eq(trade.coinIn, 1))
+
+        const querySumBTCOut = await req.payload.db.drizzle
+          .select({
+            result: sum(trade.amountOut),
+          })
+          .from(trade)
+          .where(eq(trade.coinOut, 1))
+
+        const querySumETHIn = await req.payload.db.drizzle
+          .select({
+            result: sum(trade.amountIn),
+          })
+          .from(trade)
+          .where(eq(trade.coinIn, 2))
+
+        const querySumETHOut = await req.payload.db.drizzle
+          .select({
+            result: sum(trade.amountOut),
+          })
+          .from(trade)
+          .where(eq(trade.coinOut, 2))
+
+        const querySumSOLIn = await req.payload.db.drizzle
+          .select({
+            result: sum(trade.amountIn),
+          })
+          .from(trade)
+          .where(eq(trade.coinIn, 3))
+
+        const querySumSOLOut = await req.payload.db.drizzle
+          .select({
+            result: sum(trade.amountOut),
+          })
+          .from(trade)
+          .where(eq(trade.coinOut, 3))
+
+        const sumBRLIn = Number(querySumBRLIn[0].result)
+        const sumBRLOut = Number(querySumBRLOut[0].result)
+        const totalBTCHold = Number(querySumBTCOut[0].result) - Number(querySumBTCIn[0].result)
+        const totalETHHold = Number(querySumETHOut[0].result) - Number(querySumETHIn[0].result)
+        const totalSOLHold = Number(querySumSOLOut[0].result) - Number(querySumSOLIn[0].result)
+
+        return Response.json({
+          totalInvested: sumBRLIn,
+          netInvested: sumBRLIn - sumBRLOut,
+          totalBTC: totalBTCHold,
+          totalETH: totalETHHold,
+          totalSOL: totalSOLHold,
+        })
+      },
+    },
   ],
 })
