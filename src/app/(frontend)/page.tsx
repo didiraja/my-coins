@@ -2,7 +2,7 @@ import { getPayload } from 'payload'
 import React from 'react'
 import config from '@/payload.config'
 import { Coin } from '@/payload-types'
-import { showReadableDate } from '@/libs/format'
+import { formatBRL, formatUSD, showReadableDate } from '@/libs/format'
 import { GetDashValues } from '@/libs/request'
 // import * as S from './style.module.css'
 
@@ -36,14 +36,16 @@ export default async function HomePage() {
           </a>
         </div>
       </div>
-      <div className="summary">
-        <p>Total invest net: {dashValues?.investing.net}</p>
-        <p>Total Balance (USD): {dashValues?.balance.total}</p>
-        <p>Total Balance (BRL): {dashValues?.balance.totalBRL}</p>
-        <p>Total Balance (BTC): {dashValues?.balance.btc}</p>
-        <p>Total Balance (ETH): {dashValues?.balance.eth}</p>
-        <p>Total Balance (SOL): {dashValues?.balance.sol}</p>
-      </div>
+      {dashValues && (
+        <div className="summary">
+          <p>Total invest net: {formatUSD(dashValues?.investing.net)}</p>
+          <p>Total Balance (USD): {formatUSD(dashValues?.balance.total)}</p>
+          <p>Total Balance (BRL): {formatBRL(dashValues?.balance.totalBRL)}</p>
+          <p>Total Balance (BTC): {formatUSD(dashValues?.balance.btc)}</p>
+          <p>Total Balance (ETH): {formatUSD(dashValues?.balance.eth)}</p>
+          <p>Total Balance (SOL): {formatUSD(dashValues?.balance.sol)}</p>
+        </div>
+      )}
       <div className="list">
         <ul>
           {tradesList.docs.map((trade) => {
