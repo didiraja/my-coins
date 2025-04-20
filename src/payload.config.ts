@@ -118,6 +118,11 @@ export default buildConfig({
 
         const balanceSOL = totalSOLHold * coinQuotes.solana.usd
 
+        const totalBalanceBRL =
+          totalBTCHold * coinQuotes.bitcoin.brl +
+          totalETHHold * coinQuotes.ethereum.brl +
+          totalSOLHold * coinQuotes.solana.brl
+
         return Response.json({
           investing: {
             total: sumBRLIn,
@@ -130,6 +135,7 @@ export default buildConfig({
           },
           balance: {
             total: balanceBTC + balanceETH + balanceSOL,
+            totalBRL: totalBalanceBRL,
             btc: balanceBTC,
             eth: balanceETH,
             sol: balanceSOL,

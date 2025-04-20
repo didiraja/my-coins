@@ -1,10 +1,14 @@
-import Image from 'next/image'
 import { getPayload } from 'payload'
 import React from 'react'
 import config from '@/payload.config'
 import './styles.css'
 import { Coin } from '@/payload-types'
 import { showReadableDate } from '@/libs/format'
+import { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'My Coins Dashboard',
+}
 
 export default async function HomePage() {
   const payloadConfig = await config
