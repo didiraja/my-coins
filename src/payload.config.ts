@@ -12,6 +12,8 @@ import { Coin } from './collections/Coin'
 import { Trade } from './collections/Trade'
 import { trade } from './payload-generated-schema'
 import { eq, sum } from '@payloadcms/db-sqlite/drizzle'
+import { GetCoinsQuotes } from './libs/request'
+import { formatUSD } from './libs/format'
 // import { Media } from './collections/Media'
 
 const filename = fileURLToPath(import.meta.url)
@@ -102,18 +104,36 @@ export default buildConfig({
           .from(trade)
           .where(eq(trade.coinOut, 3))
 
+        const coinQuotes = await GetCoinsQuotes()
+
         const sumBRLIn = Number(querySumBRLIn[0].result)
         const sumBRLOut = Number(querySumBRLOut[0].result)
         const totalBTCHold = Number(querySumBTCOut[0].result) - Number(querySumBTCIn[0].result)
         const totalETHHold = Number(querySumETHOut[0].result) - Number(querySumETHIn[0].result)
         const totalSOLHold = Number(querySumSOLOut[0].result) - Number(querySumSOLIn[0].result)
 
+        const balanceBTC = totalBTCHold * coinQuotes.bitcoin.usd
+
+        const balanceETH = totalETHHold * coinQuotes.ethereum.usd
+
+        const balanceSOL = totalSOLHold * coinQuotes.solana.usd
+
         return Response.json({
-          totalInvested: sumBRLIn,
-          netInvested: sumBRLIn - sumBRLOut,
-          totalBTC: totalBTCHold,
-          totalETH: totalETHHold,
-          totalSOL: totalSOLHold,
+          investing: {
+            total: sumBRLIn,
+            net: sumBRLIn - sumBRLOut,
+          },
+          hold: {
+            btc: totalBTCHold,
+            eth: totalETHHold,
+            sol: totalSOLHold,
+          },
+          balance: {
+            total: balanceBTC + balanceETH + balanceSOL,
+            btc: balanceBTC,
+            eth: balanceETH,
+            sol: balanceSOL,
+          },
         })
       },
     },
