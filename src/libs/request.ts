@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios, { AxiosResponse } from 'axios'
 
 export const GetCoinsQuotes = async () => {
   try {
@@ -11,6 +11,42 @@ export const GetCoinsQuotes = async () => {
         vs_currencies: 'usd,brl',
       },
     })
+
+    return response.data
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export type IDashEndpoint = {
+  investing: {
+    total: number
+    net: number
+  }
+  hold: {
+    btc: number
+    eth: number
+    sol: number
+  }
+  balance: {
+    total: number
+    totalBRL: number
+    btc: number
+    eth: number
+    sol: number
+  }
+}
+
+export const GetDashValues = async () => {
+  try {
+    const response: AxiosResponse<IDashEndpoint> = await axios.get(
+      'http://localhost:3000/api/dashboard',
+      {
+        // headers: {
+        //   'x-cg-demo-api-key': process.env.API_TOKEN,
+        // },
+      },
+    )
 
     return response.data
   } catch (error) {

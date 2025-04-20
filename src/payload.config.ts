@@ -1,5 +1,5 @@
 // storage-adapter-import-placeholder
-import { sql, sqliteAdapter } from '@payloadcms/db-sqlite'
+import { sqliteAdapter } from '@payloadcms/db-sqlite'
 import { payloadCloudPlugin } from '@payloadcms/payload-cloud'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import path from 'path'
@@ -13,8 +13,6 @@ import { Trade } from './collections/Trade'
 import { trade } from './payload-generated-schema'
 import { eq, sum } from '@payloadcms/db-sqlite/drizzle'
 import { GetCoinsQuotes } from './libs/request'
-import { formatUSD } from './libs/format'
-// import { Media } from './collections/Media'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)

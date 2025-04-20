@@ -1,26 +1,24 @@
 import { getPayload } from 'payload'
 import React from 'react'
 import config from '@/payload.config'
-import './styles.css'
 import { Coin } from '@/payload-types'
 import { showReadableDate } from '@/libs/format'
-import { Metadata } from 'next'
-
-export const metadata: Metadata = {
-  title: 'My Coins Dashboard',
-}
+import { GetDashValues } from '@/libs/request'
+// import * as S from './style.module.css'
 
 export default async function HomePage() {
   const payloadConfig = await config
   const payload = await getPayload({ config: payloadConfig })
 
-  const result = await payload.find({
+  const tradesList = await payload.find({
     collection: 'trade',
     sort: '-tradeDate',
   })
 
+  const dashValues = await GetDashValues()
+
   // if (typeof window !== 'undefined') {
-  //   console.log(result)
+  //   console.log(dashValues)
   // }
 
   return (
@@ -38,9 +36,17 @@ export default async function HomePage() {
           </a>
         </div>
       </div>
+      <div className="summary">
+        <p>Total invest net: {dashValues?.investing.net}</p>
+        <p>Total Balance (USD): {dashValues?.balance.total}</p>
+        <p>Total Balance (BRL): {dashValues?.balance.totalBRL}</p>
+        <p>Total Balance (BTC): {dashValues?.balance.btc}</p>
+        <p>Total Balance (ETH): {dashValues?.balance.eth}</p>
+        <p>Total Balance (SOL): {dashValues?.balance.sol}</p>
+      </div>
       <div className="list">
         <ul>
-          {result.docs.map((trade) => {
+          {tradesList.docs.map((trade) => {
             return (
               <li key={trade.id}>
                 {showReadableDate(trade.tradeDate)} - {(trade.coinIn as Coin).coin}:{' '}
