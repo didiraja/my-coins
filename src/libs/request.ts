@@ -40,7 +40,7 @@ export type IDashEndpoint = {
 export const GetDashValues = async () => {
   try {
     const response: AxiosResponse<IDashEndpoint> = await axios.get(
-      'http://localhost:3000/api/dashboard',
+      '/api/dashboard',
       {
         headers: {
           'x-secret-token': process.env.PAYLOAD_SECRET,
