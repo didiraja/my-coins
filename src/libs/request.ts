@@ -39,8 +39,7 @@ export type IDashEndpoint = {
 
 export const GetDashValues = async () => {
   try {
-    const response: AxiosResponse<IDashEndpoint> = await axios.get(
-      '/api/dashboard',
+    const response: AxiosResponse<IDashEndpoint> = await axios.get(`${process.env.VERCEL_ENV === "production" ? ("https://"+process.env.VERCEL_URL) : "http://localhost:3000"}/api/dashboard`,
       {
         headers: {
           'x-secret-token': process.env.PAYLOAD_SECRET,
