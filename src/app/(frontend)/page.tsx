@@ -6,6 +6,10 @@ import { formatBRL, formatUSD, showReadableDate } from '@/libs/format'
 import { GetDashValues } from '@/libs/request'
 // import * as S from './style.module.css'
 
+export const dynamic = 'force-dynamic'
+
+export const revalidate = 0
+
 export default async function HomePage() {
   const payloadConfig = await config
   const payload = await getPayload({ config: payloadConfig })

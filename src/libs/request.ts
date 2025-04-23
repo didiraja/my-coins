@@ -35,14 +35,21 @@ export type IDashEndpoint = {
     eth: number
     sol: number
   }
+  quote: {
+    btc: number
+  }
 }
 
 export const GetDashValues = async () => {
   try {
-    const response: AxiosResponse<IDashEndpoint> = await axios.get(`${process.env.VERCEL_ENV === "production" ? "https://my-coins-vert.vercel.app/" : "http://localhost:3000"}/api/dashboard`,
+    const response: AxiosResponse<IDashEndpoint> = await axios.get(
+      `${process.env.VERCEL_ENV === 'production' ? 'https://my-coins-vert.vercel.app/' : 'http://localhost:3000'}/api/dashboard`,
       {
         headers: {
           'x-secret-token': process.env.PAYLOAD_SECRET,
+          'Cache-Control': 'no-store',
+          Pragma: 'no-cache',
+          Expires: '0',
         },
       },
     )
