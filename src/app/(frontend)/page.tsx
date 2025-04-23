@@ -4,6 +4,7 @@ import config from '@/payload.config'
 import { Coin } from '@/payload-types'
 import { formatBRL, formatUSD, showReadableDate } from '@/libs/format'
 import { GetDashValues } from '@/libs/request'
+import Card from '@/components/Card'
 // import * as S from './style.module.css'
 
 export const dynamic = 'force-dynamic'
@@ -27,11 +28,11 @@ export default async function HomePage() {
 
   return (
     <div className="home">
-      <div className="content">
+      <div className="title">
         <h1>My Coins</h1>
-        <div className="links">
+        <div>
           <a
-            className="admin"
+            className="btn-link"
             href={payloadConfig.routes.admin}
             rel="noopener noreferrer"
             target="_blank"
@@ -41,15 +42,17 @@ export default async function HomePage() {
         </div>
       </div>
       {dashValues && (
-        <div className="summary">
-          <p>BTC value: {formatUSD(dashValues?.quote.btc)}</p>
-          <p>Total invest net: {formatBRL(dashValues?.investing.net)}</p>
-          <p>Total Balance (USD): {formatUSD(dashValues?.balance.total)}</p>
-          <p>Total Balance (BRL): {formatBRL(dashValues?.balance.totalBRL)}</p>
-          <p>Total Balance (BTC): {formatUSD(dashValues?.balance.btc)}</p>
-          <p>Total Balance (ETH): {formatUSD(dashValues?.balance.eth)}</p>
-          <p>Total Balance (SOL): {formatUSD(dashValues?.balance.sol)}</p>
-        </div>
+        <>
+          <div className="summary">
+            <Card label="BTC value:">{formatUSD(dashValues?.quote.btc)}</Card>
+            <Card label="Total (BRL):">{formatBRL(dashValues?.balance.totalBRL)}</Card>
+            <Card label="Total invest net:">{formatBRL(dashValues?.investing.net)}</Card>
+            <Card label="Total (USD):">{formatUSD(dashValues?.balance.total)}</Card>
+            <Card label="Total (BTC):">{formatUSD(dashValues?.balance.btc)}</Card>
+            <Card label="Total (ETH):">{formatUSD(dashValues?.balance.eth)}</Card>
+            <Card label="Total (SOL):">{formatUSD(dashValues?.balance.sol)}</Card>
+          </div>
+        </>
       )}
       <div className="list">
         <ul>

@@ -1,8 +1,31 @@
 @import "tailwindcss";
 
 html, body {
-  @apply h-screen bg-slate-900 text-white;
+  @apply h-[100%] bg-slate-900 text-white p-4 text-base leading-none;
 }
 
-.home {
+h1 {
+  @apply text-3xl font-semibold mb-4;
+}
+
+.title {
+  @apply flex items-baseline gap-2 mb-5;
+
+  .btn-link {
+    @apply text-sm bg-gray-800 p-1;
+  }
+}
+
+.summary {
+  @apply grid grid-cols-2 gap-4 mb-5;
+}
+
+.card--card {
+  @apply bg-white text-black rounded-md p-2 text-xl;
+}
+.card--label {
+  @apply font-semibold;
+}
+.card--value {
+
 }
