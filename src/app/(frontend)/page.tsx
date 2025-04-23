@@ -42,7 +42,8 @@ export default async function HomePage() {
       </div>
       {dashValues && (
         <div className="summary">
-          <p>Total invest net: {formatUSD(dashValues?.investing.net)}</p>
+          <p>BTC value: {formatUSD(dashValues?.quote.btc)}</p>
+          <p>Total invest net: {formatBRL(dashValues?.investing.net)}</p>
           <p>Total Balance (USD): {formatUSD(dashValues?.balance.total)}</p>
           <p>Total Balance (BRL): {formatBRL(dashValues?.balance.totalBRL)}</p>
           <p>Total Balance (BTC): {formatUSD(dashValues?.balance.btc)}</p>

@@ -137,17 +137,20 @@ export default buildConfig({
             total: sumBRLIn,
             net: sumBRLIn - sumBRLOut,
           },
-          hold: {
-            btc: totalBTCHold,
-            eth: totalETHHold,
-            sol: totalSOLHold,
-          },
           balance: {
             total: balanceBTC + balanceETH + balanceSOL,
             totalBRL: totalBalanceBRL,
             btc: balanceBTC,
             eth: balanceETH,
             sol: balanceSOL,
+          },
+          hold: {
+            btc: totalBTCHold,
+            eth: totalETHHold,
+            sol: totalSOLHold,
+          },
+          quote: {
+            btc: coinQuotes.bitcoin.usd,
           },
         })
       },
