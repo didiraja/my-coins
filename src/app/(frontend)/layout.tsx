@@ -1,5 +1,5 @@
 import React from 'react'
-import './styles.css'
+import '@/app/globals.css'
 
 export const metadata = {
   title: 'My Coins Dashboard',
