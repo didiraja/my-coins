@@ -1,4 +1,5 @@
 import axios, { AxiosResponse } from 'axios'
+import { IDashEndpoint } from './endpoints'
 
 export const GetCoinsQuotes = async () => {
   try {
@@ -15,28 +16,6 @@ export const GetCoinsQuotes = async () => {
     return response.data
   } catch (error) {
     console.log(error)
-  }
-}
-
-export type IDashEndpoint = {
-  investing: {
-    total: number
-    net: number
-  }
-  hold: {
-    btc: number
-    eth: number
-    sol: number
-  }
-  balance: {
-    total: number
-    totalBRL: number
-    btc: number
-    eth: number
-    sol: number
-  }
-  quote: {
-    btc: number
   }
 }
 
