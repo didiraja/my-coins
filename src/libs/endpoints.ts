@@ -7,6 +7,7 @@ export type IDashEndpoint = {
   investing: {
     total: number
     net: number
+    profit: number
   }
   hold: {
     btc: number
@@ -112,10 +113,13 @@ export const DashboardEndpoint = async (req: PayloadRequest) => {
     totalETHHold * coinQuotes.ethereum.brl +
     totalSOLHold * coinQuotes.solana.brl
 
+  const totalInvestingNet = sumBRLIn - sumBRLOut
+
   const output: IDashEndpoint = {
     investing: {
       total: sumBRLIn,
-      net: sumBRLIn - sumBRLOut,
+      net: totalInvestingNet,
+      profit: totalBalanceBRL - totalInvestingNet,
     },
     balance: {
       total: balanceBTC + balanceETH + balanceSOL,

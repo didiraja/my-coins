@@ -1,20 +1,25 @@
 'use client'
 
-import S from './Card.module.css'
-
 const Card = ({
   label,
   children,
+  showProfit = false,
   profit,
 }: {
   label: string
   children: string
+  showProfit?: boolean
   profit?: boolean
 }) => {
   return (
     <div className="bg-white text-black rounded-md p-2 text-xl">
       <p className="font-semibold">{label}</p>
-      <p className={profit ? 'text-green-500' : 'text-red-500'}>{children}</p>
+
+      {showProfit ? (
+        <p className={profit ? 'text-green-500' : 'text-red-500'}>{children}</p>
+      ) : (
+        <p className="">{children}</p>
+      )}
     </div>
   )
 }
