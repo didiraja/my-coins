@@ -1,8 +1,12 @@
+'use client'
+
+import S from './Card.module.css'
+
 const Card = ({ label, children }: { label: string; children: string }) => {
   return (
-    <div className="card--card">
-      <p className="card--label">{label}</p>
-      <p className="card--value">{children}</p>
+    <div className={S.card}>
+      <p className={S.label}>{label}</p>
+      <p className={S.value}>{children}</p>
     </div>
   )
 }

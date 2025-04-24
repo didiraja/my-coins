@@ -1,0 +1,13 @@
+@reference '../../app/globals.css';
+
+.card {
+  @apply bg-white text-black rounded-md p-2 text-xl;
+};
+
+.label {
+  @apply font-semibold;
+};
+
+.value {
+
+};

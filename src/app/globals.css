@@ -19,13 +19,3 @@ h1 {
 .summary {
   @apply grid grid-cols-2 gap-4 mb-5;
 }
-
-.card--card {
-  @apply bg-white text-black rounded-md p-2 text-xl;
-}
-.card--label {
-  @apply font-semibold;
-}
-.card--value {
-
-}
