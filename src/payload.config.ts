@@ -10,6 +10,7 @@ import sharp from 'sharp'
 import { Users } from './collections/Users'
 import { Coin } from './collections/Coin'
 import { Trade } from './collections/Trade'
+import { Wallet } from './collections/Wallet'
 import { DashboardEndpoint } from './libs/endpoints'
 
 const filename = fileURLToPath(import.meta.url)
@@ -22,7 +23,7 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [Users, Coin, Trade],
+  collections: [Users, Coin, Trade, Wallet],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {

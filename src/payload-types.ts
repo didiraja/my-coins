@@ -69,6 +69,7 @@ export interface Config {
     users: User;
     coin: Coin;
     trade: Trade;
+    wallet: Wallet;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
@@ -78,6 +79,7 @@ export interface Config {
     users: UsersSelect<false> | UsersSelect<true>;
     coin: CoinSelect<false> | CoinSelect<true>;
     trade: TradeSelect<false> | TradeSelect<true>;
+    wallet: WalletSelect<false> | WalletSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
@@ -157,6 +159,17 @@ export interface Trade {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "wallet".
+ */
+export interface Wallet {
+  id: number;
+  coin: number | Coin;
+  amount: number;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-locked-documents".
  */
 export interface PayloadLockedDocument {
@@ -173,6 +186,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'trade';
         value: number | Trade;
+      } | null)
+    | ({
+        relationTo: 'wallet';
+        value: number | Wallet;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -250,6 +267,16 @@ export interface TradeSelect<T extends boolean = true> {
   amountIn?: T;
   coinOut?: T;
   amountOut?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "wallet_select".
+ */
+export interface WalletSelect<T extends boolean = true> {
+  coin?: T;
+  amount?: T;
   updatedAt?: T;
   createdAt?: T;
 }
