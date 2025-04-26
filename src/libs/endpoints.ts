@@ -123,19 +123,9 @@ export const DashboardEndpoint = async (req: PayloadRequest) => {
     },
     investing: {
       net: totalInvestingNet,
+      // all money invested on btc, by coin:
+      // SELECT coin_in_id, sum(amount_in) as sum_coin FROM trade where coin_out_id = '1' group by coin_in_id;
     },
-    // balance: {
-    //   total: balanceBTC + balanceETH + balanceSOL,
-    //   totalBRL: totalBalanceBRL,
-    //   btc: balanceBTC,
-    //   eth: balanceETH,
-    //   sol: balanceSOL,
-    // },
-    // hold: {
-    //   btc: totalBTCHold,
-    //   eth: totalETHHold,
-    //   sol: totalSOLHold,
-    // },
   }
 
   return Response.json(output)
