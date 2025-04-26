@@ -1,6 +1,6 @@
 import { PayloadRequest } from 'payload'
 import { eq, sum } from '@payloadcms/db-sqlite/drizzle'
-import { trade } from '@/payload-generated-schema'
+import { trade, wallet } from '@/payload-generated-schema'
 import { GetCoinsQuotes } from './request'
 
 export type IDashEndpoint = {
@@ -24,6 +24,7 @@ export type IDashEndpoint = {
   quote: {
     btc: number
   }
+  v2: unknown
 }
 
 export const DashboardEndpoint = async (req: PayloadRequest) => {
@@ -115,7 +116,16 @@ export const DashboardEndpoint = async (req: PayloadRequest) => {
 
   const totalInvestingNet = sumBRLIn - sumBRLOut
 
+  const Wallets = await req.payload.db.drizzle.select().from(wallet)
+
+  const walletBTC = Wallets.find((item) => item.coin === 1)
+
   const output: IDashEndpoint = {
+    v2: {
+      hold: {
+        btc: walletBTC?.amount,
+      },
+    },
     investing: {
       total: sumBRLIn,
       net: totalInvestingNet,
