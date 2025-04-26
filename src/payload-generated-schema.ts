@@ -97,6 +97,30 @@ export const trade = sqliteTable(
   }),
 )
 
+export const wallet = sqliteTable(
+  'wallet',
+  {
+    id: integer('id').primaryKey(),
+    coin: integer('coin_id')
+      .notNull()
+      .references(() => coin.id, {
+        onDelete: 'set null',
+      }),
+    amount: numeric('amount').notNull(),
+    updatedAt: text('updated_at')
+      .notNull()
+      .default(sql`(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))`),
+    createdAt: text('created_at')
+      .notNull()
+      .default(sql`(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))`),
+  },
+  (columns) => ({
+    wallet_coin_idx: index('wallet_coin_idx').on(columns.coin),
+    wallet_updated_at_idx: index('wallet_updated_at_idx').on(columns.updatedAt),
+    wallet_created_at_idx: index('wallet_created_at_idx').on(columns.createdAt),
+  }),
+)
+
 export const payload_locked_documents = sqliteTable(
   'payload_locked_documents',
   {
@@ -132,6 +156,7 @@ export const payload_locked_documents_rels = sqliteTable(
     usersID: integer('users_id'),
     coinID: integer('coin_id'),
     tradeID: integer('trade_id'),
+    walletID: integer('wallet_id'),
   },
   (columns) => ({
     order: index('payload_locked_documents_rels_order_idx').on(columns.order),
@@ -146,6 +171,9 @@ export const payload_locked_documents_rels = sqliteTable(
     payload_locked_documents_rels_trade_id_idx: index(
       'payload_locked_documents_rels_trade_id_idx',
     ).on(columns.tradeID),
+    payload_locked_documents_rels_wallet_id_idx: index(
+      'payload_locked_documents_rels_wallet_id_idx',
+    ).on(columns.walletID),
     parentFk: foreignKey({
       columns: [columns['parent']],
       foreignColumns: [payload_locked_documents.id],
@@ -165,6 +193,11 @@ export const payload_locked_documents_rels = sqliteTable(
       columns: [columns['tradeID']],
       foreignColumns: [trade.id],
       name: 'payload_locked_documents_rels_trade_fk',
+    }).onDelete('cascade'),
+    walletIdFk: foreignKey({
+      columns: [columns['walletID']],
+      foreignColumns: [wallet.id],
+      name: 'payload_locked_documents_rels_wallet_fk',
     }).onDelete('cascade'),
   }),
 )
@@ -259,6 +292,13 @@ export const relations_trade = relations(trade, ({ one }) => ({
     relationName: 'coinOut',
   }),
 }))
+export const relations_wallet = relations(wallet, ({ one }) => ({
+  coin: one(coin, {
+    fields: [wallet.coin],
+    references: [coin.id],
+    relationName: 'coin',
+  }),
+}))
 export const relations_payload_locked_documents_rels = relations(
   payload_locked_documents_rels,
   ({ one }) => ({
@@ -281,6 +321,11 @@ export const relations_payload_locked_documents_rels = relations(
       fields: [payload_locked_documents_rels.tradeID],
       references: [trade.id],
       relationName: 'trade',
+    }),
+    walletID: one(wallet, {
+      fields: [payload_locked_documents_rels.walletID],
+      references: [wallet.id],
+      relationName: 'wallet',
     }),
   }),
 )
@@ -318,6 +363,7 @@ type DatabaseSchema = {
   users: typeof users
   coin: typeof coin
   trade: typeof trade
+  wallet: typeof wallet
   payload_locked_documents: typeof payload_locked_documents
   payload_locked_documents_rels: typeof payload_locked_documents_rels
   payload_preferences: typeof payload_preferences
@@ -326,6 +372,7 @@ type DatabaseSchema = {
   relations_users: typeof relations_users
   relations_coin: typeof relations_coin
   relations_trade: typeof relations_trade
+  relations_wallet: typeof relations_wallet
   relations_payload_locked_documents_rels: typeof relations_payload_locked_documents_rels
   relations_payload_locked_documents: typeof relations_payload_locked_documents
   relations_payload_preferences_rels: typeof relations_payload_preferences_rels
