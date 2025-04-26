@@ -7,7 +7,7 @@ const Card = ({
   profit,
 }: {
   label: string
-  children: string
+  children: string | number
   showProfit?: boolean
   profit?: boolean
 }) => {

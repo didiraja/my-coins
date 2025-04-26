@@ -4,27 +4,18 @@ import { trade, wallet } from '@/payload-generated-schema'
 import { GetCoinsQuotes } from './request'
 
 export type IDashEndpoint = {
-  investing: {
-    total: number
-    net: number
-    profit: number
-  }
-  hold: {
-    btc: number
-    eth: number
-    sol: number
-  }
-  balance: {
-    total: number
-    totalBRL: number
-    btc: number
-    eth: number
-    sol: number
-  }
   quote: {
     btc: number
   }
-  v2: unknown
+  hold: {
+    btc: number
+  }
+  balance: {
+    btc: number
+  }
+  investing: {
+    net: number
+  }
 }
 
 export const DashboardEndpoint = async (req: PayloadRequest) => {
@@ -53,66 +44,66 @@ export const DashboardEndpoint = async (req: PayloadRequest) => {
     .from(trade)
     .where(eq(trade.coinOut, 8))
 
-  const querySumBTCIn = await req.payload.db.drizzle
-    .select({
-      result: sum(trade.amountIn),
-    })
-    .from(trade)
-    .where(eq(trade.coinIn, 1))
+  // const querySumBTCIn = await req.payload.db.drizzle
+  //   .select({
+  //     result: sum(trade.amountIn),
+  //   })
+  //   .from(trade)
+  //   .where(eq(trade.coinIn, 1))
 
-  const querySumBTCOut = await req.payload.db.drizzle
-    .select({
-      result: sum(trade.amountOut),
-    })
-    .from(trade)
-    .where(eq(trade.coinOut, 1))
+  // const querySumBTCOut = await req.payload.db.drizzle
+  //   .select({
+  //     result: sum(trade.amountOut),
+  //   })
+  //   .from(trade)
+  //   .where(eq(trade.coinOut, 1))
 
-  const querySumETHIn = await req.payload.db.drizzle
-    .select({
-      result: sum(trade.amountIn),
-    })
-    .from(trade)
-    .where(eq(trade.coinIn, 2))
+  // const querySumETHIn = await req.payload.db.drizzle
+  //   .select({
+  //     result: sum(trade.amountIn),
+  //   })
+  //   .from(trade)
+  //   .where(eq(trade.coinIn, 2))
 
-  const querySumETHOut = await req.payload.db.drizzle
-    .select({
-      result: sum(trade.amountOut),
-    })
-    .from(trade)
-    .where(eq(trade.coinOut, 2))
+  // const querySumETHOut = await req.payload.db.drizzle
+  //   .select({
+  //     result: sum(trade.amountOut),
+  //   })
+  //   .from(trade)
+  //   .where(eq(trade.coinOut, 2))
 
-  const querySumSOLIn = await req.payload.db.drizzle
-    .select({
-      result: sum(trade.amountIn),
-    })
-    .from(trade)
-    .where(eq(trade.coinIn, 3))
+  // const querySumSOLIn = await req.payload.db.drizzle
+  //   .select({
+  //     result: sum(trade.amountIn),
+  //   })
+  //   .from(trade)
+  //   .where(eq(trade.coinIn, 3))
 
-  const querySumSOLOut = await req.payload.db.drizzle
-    .select({
-      result: sum(trade.amountOut),
-    })
-    .from(trade)
-    .where(eq(trade.coinOut, 3))
+  // const querySumSOLOut = await req.payload.db.drizzle
+  //   .select({
+  //     result: sum(trade.amountOut),
+  //   })
+  //   .from(trade)
+  //   .where(eq(trade.coinOut, 3))
 
   const coinQuotes = await GetCoinsQuotes()
 
   const sumBRLIn = Number(querySumBRLIn[0].result)
   const sumBRLOut = Number(querySumBRLOut[0].result)
-  const totalBTCHold = Number(querySumBTCOut[0].result) - Number(querySumBTCIn[0].result)
-  const totalETHHold = Number(querySumETHOut[0].result) - Number(querySumETHIn[0].result)
-  const totalSOLHold = Number(querySumSOLOut[0].result) - Number(querySumSOLIn[0].result)
+  // const totalBTCHold = Number(querySumBTCOut[0].result) - Number(querySumBTCIn[0].result)
+  // const totalETHHold = Number(querySumETHOut[0].result) - Number(querySumETHIn[0].result)
+  // const totalSOLHold = Number(querySumSOLOut[0].result) - Number(querySumSOLIn[0].result)
 
-  const balanceBTC = totalBTCHold * coinQuotes.bitcoin.usd
+  // const balanceBTC = totalBTCHold * coinQuotes.bitcoin.usd
 
-  const balanceETH = totalETHHold * coinQuotes.ethereum.usd
+  // const balanceETH = totalETHHold * coinQuotes.ethereum.usd
 
-  const balanceSOL = totalSOLHold * coinQuotes.solana.usd
+  // const balanceSOL = totalSOLHold * coinQuotes.solana.usd
 
-  const totalBalanceBRL =
-    totalBTCHold * coinQuotes.bitcoin.brl +
-    totalETHHold * coinQuotes.ethereum.brl +
-    totalSOLHold * coinQuotes.solana.brl
+  // const totalBalanceBRL =
+  //   totalBTCHold * coinQuotes.bitcoin.brl +
+  //   totalETHHold * coinQuotes.ethereum.brl +
+  //   totalSOLHold * coinQuotes.solana.brl
 
   const totalInvestingNet = sumBRLIn - sumBRLOut
 
@@ -121,31 +112,30 @@ export const DashboardEndpoint = async (req: PayloadRequest) => {
   const walletBTC = Wallets.find((item) => item.coin === 1)
 
   const output: IDashEndpoint = {
-    v2: {
-      hold: {
-        btc: walletBTC?.amount,
-      },
-    },
-    investing: {
-      total: sumBRLIn,
-      net: totalInvestingNet,
-      profit: totalBalanceBRL - totalInvestingNet,
-    },
-    balance: {
-      total: balanceBTC + balanceETH + balanceSOL,
-      totalBRL: totalBalanceBRL,
-      btc: balanceBTC,
-      eth: balanceETH,
-      sol: balanceSOL,
-    },
-    hold: {
-      btc: totalBTCHold,
-      eth: totalETHHold,
-      sol: totalSOLHold,
-    },
     quote: {
       btc: coinQuotes.bitcoin.usd,
     },
+    hold: {
+      btc: Number(walletBTC?.amount),
+    },
+    balance: {
+      btc: Number(walletBTC?.amount) * coinQuotes.bitcoin.brl,
+    },
+    investing: {
+      net: totalInvestingNet,
+    },
+    // balance: {
+    //   total: balanceBTC + balanceETH + balanceSOL,
+    //   totalBRL: totalBalanceBRL,
+    //   btc: balanceBTC,
+    //   eth: balanceETH,
+    //   sol: balanceSOL,
+    // },
+    // hold: {
+    //   btc: totalBTCHold,
+    //   eth: totalETHHold,
+    //   sol: totalSOLHold,
+    // },
   }
 
   return Response.json(output)
