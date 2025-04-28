@@ -1,6 +1,6 @@
 import { PayloadRequest } from 'payload'
-import { eq, sum } from '@payloadcms/db-sqlite/drizzle'
-import { trade, wallet } from '@/payload-generated-schema'
+import { eq, sql, sum } from '@payloadcms/db-sqlite/drizzle'
+import { coin, trade, wallet } from '@/payload-generated-schema'
 import { GetCoinsQuotes } from './request'
 
 export type IDashEndpoint = {
@@ -14,7 +14,11 @@ export type IDashEndpoint = {
     btc: number
   }
   investing: {
-    net: number
+    totalNet: number
+    totalBTCNet: number
+  }
+  profit: {
+    btc: number
   }
 }
 
@@ -44,72 +48,74 @@ export const DashboardEndpoint = async (req: PayloadRequest) => {
     .from(trade)
     .where(eq(trade.coinOut, 8))
 
-  // const querySumBTCIn = await req.payload.db.drizzle
-  //   .select({
-  //     result: sum(trade.amountIn),
-  //   })
-  //   .from(trade)
-  //   .where(eq(trade.coinIn, 1))
-
-  // const querySumBTCOut = await req.payload.db.drizzle
-  //   .select({
-  //     result: sum(trade.amountOut),
-  //   })
-  //   .from(trade)
-  //   .where(eq(trade.coinOut, 1))
-
-  // const querySumETHIn = await req.payload.db.drizzle
-  //   .select({
-  //     result: sum(trade.amountIn),
-  //   })
-  //   .from(trade)
-  //   .where(eq(trade.coinIn, 2))
-
-  // const querySumETHOut = await req.payload.db.drizzle
-  //   .select({
-  //     result: sum(trade.amountOut),
-  //   })
-  //   .from(trade)
-  //   .where(eq(trade.coinOut, 2))
-
-  // const querySumSOLIn = await req.payload.db.drizzle
-  //   .select({
-  //     result: sum(trade.amountIn),
-  //   })
-  //   .from(trade)
-  //   .where(eq(trade.coinIn, 3))
-
-  // const querySumSOLOut = await req.payload.db.drizzle
-  //   .select({
-  //     result: sum(trade.amountOut),
-  //   })
-  //   .from(trade)
-  //   .where(eq(trade.coinOut, 3))
-
   const coinQuotes = await GetCoinsQuotes()
 
   const sumBRLIn = Number(querySumBRLIn[0].result)
   const sumBRLOut = Number(querySumBRLOut[0].result)
-  // const totalBTCHold = Number(querySumBTCOut[0].result) - Number(querySumBTCIn[0].result)
-  // const totalETHHold = Number(querySumETHOut[0].result) - Number(querySumETHIn[0].result)
-  // const totalSOLHold = Number(querySumSOLOut[0].result) - Number(querySumSOLIn[0].result)
-
-  // const balanceBTC = totalBTCHold * coinQuotes.bitcoin.usd
-
-  // const balanceETH = totalETHHold * coinQuotes.ethereum.usd
-
-  // const balanceSOL = totalSOLHold * coinQuotes.solana.usd
-
-  // const totalBalanceBRL =
-  //   totalBTCHold * coinQuotes.bitcoin.brl +
-  //   totalETHHold * coinQuotes.ethereum.brl +
-  //   totalSOLHold * coinQuotes.solana.brl
 
   const totalInvestingNet = sumBRLIn - sumBRLOut
 
   const Wallets = await req.payload.db.drizzle.select().from(wallet)
 
   const walletBTC = Wallets.find((item) => item.coin === 1)
+
+  const balanceBTC = Number(walletBTC?.amount) * coinQuotes.bitcoin.brl
+
+  const fullInvestingBTC = await req.payload.db.drizzle
+    .select({
+      coinName: coin.coin,
+      totalInvested: sql<number>`
+      SUM(CASE WHEN ${trade.coinOut} = 1 THEN ${trade.amountIn} ELSE 0 END)
+    `,
+      totalWithdrawn: sql<number>`
+      SUM(CASE WHEN ${trade.coinIn} = 1 THEN ${trade.amountOut} ELSE 0 END)
+    `,
+      netInvestment: sql<number>`
+      SUM(CASE WHEN ${trade.coinOut} = 1 THEN ${trade.amountIn} ELSE 0 END)
+      -
+      SUM(CASE WHEN ${trade.coinIn} = 1 THEN ${trade.amountOut} ELSE 0 END)
+    `,
+    })
+    .from(trade)
+    .innerJoin(
+      coin,
+      sql`
+      ${coin.id} = CASE
+        WHEN ${trade.coinOut} = 1 THEN ${trade.coinIn}
+        WHEN ${trade.coinIn} = 1 THEN ${trade.coinOut}
+      END
+    `,
+    )
+    .where(
+      sql`
+      ${trade.coinOut} = 1 OR ${trade.coinIn} = 1
+    `,
+    )
+    .groupBy(coin.coin)
+    .having(
+      sql`
+      SUM(CASE WHEN ${trade.coinOut} = 1 THEN ${trade.amountIn} ELSE 0 END)
+      -
+      SUM(CASE WHEN ${trade.coinIn} = 1 THEN ${trade.amountOut} ELSE 0 END)
+      != 0
+    `,
+    )
+    .orderBy(
+      sql`
+      SUM(CASE WHEN ${trade.coinOut} = 1 THEN ${trade.amountIn} ELSE 0 END)
+      -
+      SUM(CASE WHEN ${trade.coinIn} = 1 THEN ${trade.amountOut} ELSE 0 END)
+      DESC
+    `,
+    )
+
+  const investedBRL = fullInvestingBTC.find((item) => item.coinName === 'brl')
+
+  const investedUSDC = fullInvestingBTC.find((item) => item.coinName === 'usdc')
+
+  const netInvestBTCAllCoins =
+    (investedBRL?.netInvestment as number) +
+    (investedUSDC?.netInvestment as number) * coinQuotes['usd-coin'].brl
 
   const output: IDashEndpoint = {
     quote: {
@@ -119,12 +125,16 @@ export const DashboardEndpoint = async (req: PayloadRequest) => {
       btc: Number(walletBTC?.amount),
     },
     balance: {
-      btc: Number(walletBTC?.amount) * coinQuotes.bitcoin.brl,
+      btc: balanceBTC,
     },
     investing: {
-      net: totalInvestingNet,
+      totalNet: totalInvestingNet,
+      totalBTCNet: netInvestBTCAllCoins,
       // all money invested on btc, by coin:
       // SELECT coin_in_id, sum(amount_in) as sum_coin FROM trade where coin_out_id = '1' group by coin_in_id;
+    },
+    profit: {
+      btc: balanceBTC - netInvestBTCAllCoins,
     },
   }
 
