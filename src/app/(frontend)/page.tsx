@@ -46,7 +46,8 @@ export default async function HomePage() {
             <Card label="BTC value:">{formatUSD(dashValues?.quote.btc)}</Card>
             <Card label="BTC hold:">{dashValues?.hold.btc}</Card>
             <Card label="BTC Balance:">{formatBRL(dashValues?.balance.btc)}</Card>
-            <Card label="Total invest net:">{formatBRL(dashValues?.investing.net)}</Card>
+            <Card label="BTC invest net:">{formatBRL(dashValues?.investing.totalBTCNet)}</Card>
+            <Card label="BTC Profit:">{formatBRL(dashValues?.profit.btc)}</Card>
           </div>
         </>
       )}
