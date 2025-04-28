@@ -8,7 +8,7 @@ export const GetCoinsQuotes = async () => {
         'x-cg-demo-api-key': process.env.API_TOKEN,
       },
       params: {
-        ids: 'bitcoin,ethereum,solana',
+        ids: 'bitcoin,ethereum,solana,usd-coin',
         vs_currencies: 'usd,brl',
       },
     })
