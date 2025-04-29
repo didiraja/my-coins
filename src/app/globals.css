@@ -5,7 +5,7 @@ html, body {
 }
 
 h1 {
-  @apply text-3xl font-semibold mb-4;
+  @apply text-3xl font-bold mb-4;
 }
 
 .title {
@@ -18,4 +18,42 @@ h1 {
 
 .summary {
   @apply grid grid-cols-2 gap-4 mb-5;
+}
+
+.coin-wrapper {
+  @apply mb-4;
+}
+
+.coin-icon {
+  @apply rounded-full w-8 h-8
+}
+
+.coin-title {
+  @apply flex gap-2 mb-4;
+
+  .label {
+    @apply text-3xl font-semibold /* border-b-1 border-white/50 */;
+  }
+}
+
+.wallet-data {
+  @apply grid grid-cols-2 gap-4 mb-5;
+}
+
+.card {
+  @apply bg-slate-800 border border-slate-700 rounded-lg p-5;
+
+  .label {
+    @apply text-base;
+  }
+
+  .value {
+    @apply text-xl font-semibold;
+  }
+}
+
+@media (min-width: 1200px) {
+  .wallet-data {
+    @apply grid-cols-4;
+  }
 }

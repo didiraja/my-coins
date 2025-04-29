@@ -29,37 +29,42 @@ export default async function HomePage() {
     <div className="home">
       <div className="title">
         <h1>My Coins</h1>
-        <div>
-          <a
-            className="btn-link"
-            href={payloadConfig.routes.admin}
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            Go to admin panel
-          </a>
-        </div>
       </div>
       {dashValues && (
         <>
-          <div className="summary">
-            <h1 className="text-3xl font-semibold pb-2 border-b-2 mb-4 border-white/70">
-              (BTC) Bitcoin
-            </h1>
-
-            <div>
-              <p className="text-base">Token Price</p>
-              <p className="text-xl font-semibold">{formatUSD(dashValues?.quote.btc)}</p>
+          <div className="coin-wrapper">
+            <div className="coin-title">
+              <div className="coin-icon bg-orange-400" />
+              <p className="label">
+                Bitcoin <span className="text-sm">BTC {dashValues?.hold.btc}</span>
+              </p>
             </div>
-          </div>
-          <div className="summary">
-            <Card label="BTC value:">{formatUSD(dashValues?.quote.btc)}</Card>
-            <Card label="BTC hold:">{dashValues?.hold.btc}</Card>
-            <Card label="BTC Balance:">{formatBRL(dashValues?.balance.btc)}</Card>
-            <Card label="BTC invest net:">{formatBRL(dashValues?.investing.totalBTCNet)}</Card>
-            <Card label="BTC Profit:" showProfit profit={dashValues?.profit.btc.hasProfit}>
-              {formatBRL(dashValues?.profit.btc.value)}
-            </Card>
+
+            <div className="wallet-data">
+              <div className="card">
+                <p className="label">Token Price</p>
+                <p className="value">{formatUSD(dashValues?.quote.btc)}</p>
+              </div>
+
+              <div className="card">
+                <p className="label">Profit</p>
+                <p
+                  className={`value ${dashValues?.profit.btc.hasProfit ? 'text-green-500' : 'text-red-500'}`}
+                >
+                  {formatBRL(dashValues?.profit.btc.value)}{' '}
+                  <span className="text-sm">+{dashValues?.profit.btc.percentage}%</span>
+                </p>
+              </div>
+
+              <div className="card">
+                <p className="label">Balance</p>
+                <p
+                  className={`value ${dashValues?.profit.btc.hasProfit ? 'text-green-500' : 'text-red-500'}`}
+                >
+                  {formatBRL(dashValues?.balance.btc)}
+                </p>
+              </div>
+            </div>
           </div>
         </>
       )}
