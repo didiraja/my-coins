@@ -43,11 +43,23 @@ export default async function HomePage() {
       {dashValues && (
         <>
           <div className="summary">
+            <h1 className="text-3xl font-semibold pb-2 border-b-2 mb-4 border-white/70">
+              (BTC) Bitcoin
+            </h1>
+
+            <div>
+              <p className="text-base">Token Price</p>
+              <p className="text-xl font-semibold">{formatUSD(dashValues?.quote.btc)}</p>
+            </div>
+          </div>
+          <div className="summary">
             <Card label="BTC value:">{formatUSD(dashValues?.quote.btc)}</Card>
             <Card label="BTC hold:">{dashValues?.hold.btc}</Card>
             <Card label="BTC Balance:">{formatBRL(dashValues?.balance.btc)}</Card>
             <Card label="BTC invest net:">{formatBRL(dashValues?.investing.totalBTCNet)}</Card>
-            <Card label="BTC Profit:">{formatBRL(dashValues?.profit.btc.value)}</Card>
+            <Card label="BTC Profit:" showProfit profit={dashValues?.profit.btc.hasProfit}>
+              {formatBRL(dashValues?.profit.btc.value)}
+            </Card>
           </div>
         </>
       )}
