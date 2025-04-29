@@ -1,6 +1,7 @@
 type AmountByCoin = {
   btc: number
   sol: number
+  aave: number
 }
 
 type Profit = {
@@ -17,9 +18,11 @@ export type IDashEndpoint = {
     totalNet: number
     totalBTCNet: number
     totalSOLNet: number
+    totalAAVENet: number
   }
   profit: {
     btc: Profit
     sol: Profit
+    aave: Profit
   }
 }

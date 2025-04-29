@@ -103,6 +103,43 @@ export default async function HomePage() {
               </div>
             </div>
           </div>
+          <div className="coin-wrapper">
+            <div className="coin-title">
+              <div className="coin-icon bg-teal-400" />
+              <p className="label">
+                Aave <span className="text-sm">AAVE {dashValues?.hold.aave}</span>
+              </p>
+            </div>
+
+            <div className="wallet-data">
+              <div className="card">
+                <p className="label">Token Price</p>
+                <p className="value">{formatUSD(dashValues?.quote.aave)}</p>
+              </div>
+
+              <div className="card">
+                <p className="label">Profit</p>
+                <p
+                  className={`value ${dashValues?.profit.aave.hasProfit ? 'text-green-500' : 'text-red-500'}`}
+                >
+                  {formatBRL(dashValues?.profit.aave.value)}{' '}
+                  <span className="text-sm">
+                    {dashValues?.profit.aave.hasProfit ? '+' : '-'}
+                    {dashValues?.profit.aave.percentage}%
+                  </span>
+                </p>
+              </div>
+
+              <div className="card">
+                <p className="label">Balance</p>
+                <p
+                  className={`value ${dashValues?.profit.aave.hasProfit ? 'text-green-500' : 'text-red-500'}`}
+                >
+                  {formatBRL(dashValues?.balance.aave)}
+                </p>
+              </div>
+            </div>
+          </div>
         </>
       )}
       <div className="list">
