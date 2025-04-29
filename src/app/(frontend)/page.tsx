@@ -66,6 +66,43 @@ export default async function HomePage() {
               </div>
             </div>
           </div>
+          <div className="coin-wrapper">
+            <div className="coin-title">
+              <div className="coin-icon bg-indigo-400" />
+              <p className="label">
+                Solana <span className="text-sm">SOL {dashValues?.hold.sol}</span>
+              </p>
+            </div>
+
+            <div className="wallet-data">
+              <div className="card">
+                <p className="label">Token Price</p>
+                <p className="value">{formatUSD(dashValues?.quote.sol)}</p>
+              </div>
+
+              <div className="card">
+                <p className="label">Profit</p>
+                <p
+                  className={`value ${dashValues?.profit.sol.hasProfit ? 'text-green-500' : 'text-red-500'}`}
+                >
+                  {formatBRL(dashValues?.profit.sol.value)}{' '}
+                  <span className="text-sm">
+                    {dashValues?.profit.sol.hasProfit ? '+' : '-'}
+                    {dashValues?.profit.sol.percentage}%
+                  </span>
+                </p>
+              </div>
+
+              <div className="card">
+                <p className="label">Balance</p>
+                <p
+                  className={`value ${dashValues?.profit.sol.hasProfit ? 'text-green-500' : 'text-red-500'}`}
+                >
+                  {formatBRL(dashValues?.balance.sol)}
+                </p>
+              </div>
+            </div>
+          </div>
         </>
       )}
       <div className="list">

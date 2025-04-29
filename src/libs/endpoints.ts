@@ -41,7 +41,11 @@ export const DashboardEndpoint = async (req: PayloadRequest) => {
 
   const walletBTC = Wallets.find((item) => item.coin === 1)
 
+  const walletSOL = Wallets.find((item) => item.coin === 3)
+
   const balanceBTC = Number(walletBTC?.amount) * coinQuotes.bitcoin.brl
+
+  const balanceSOL = Number(walletSOL?.amount) * coinQuotes.solana.brl
 
   const fullInvestingBTC = await req.payload.db.drizzle
     .select({
@@ -91,33 +95,98 @@ export const DashboardEndpoint = async (req: PayloadRequest) => {
     `,
     )
 
+  const fullInvestingSOL = await req.payload.db.drizzle
+    .select({
+      coinName: coin.coin,
+      totalInvested: sql<number>`
+      SUM(CASE WHEN ${trade.coinOut} = 3 THEN ${trade.amountIn} ELSE 0 END)
+    `,
+      totalWithdrawn: sql<number>`
+      SUM(CASE WHEN ${trade.coinIn} = 3 THEN ${trade.amountOut} ELSE 0 END)
+    `,
+      netInvestment: sql<number>`
+      SUM(CASE WHEN ${trade.coinOut} = 3 THEN ${trade.amountIn} ELSE 0 END)
+      -
+      SUM(CASE WHEN ${trade.coinIn} = 3 THEN ${trade.amountOut} ELSE 0 END)
+    `,
+    })
+    .from(trade)
+    .innerJoin(
+      coin,
+      sql`
+      ${coin.id} = CASE
+        WHEN ${trade.coinOut} = 3 THEN ${trade.coinIn}
+        WHEN ${trade.coinIn} = 3 THEN ${trade.coinOut}
+      END
+    `,
+    )
+    .where(
+      sql`
+      ${trade.coinOut} = 3 OR ${trade.coinIn} = 3
+    `,
+    )
+    .groupBy(coin.coin)
+    .having(
+      sql`
+      SUM(CASE WHEN ${trade.coinOut} = 3 THEN ${trade.amountIn} ELSE 0 END)
+      -
+      SUM(CASE WHEN ${trade.coinIn} = 3 THEN ${trade.amountOut} ELSE 0 END)
+      != 0
+    `,
+    )
+    .orderBy(
+      sql`
+      SUM(CASE WHEN ${trade.coinOut} = 3 THEN ${trade.amountIn} ELSE 0 END)
+      -
+      SUM(CASE WHEN ${trade.coinIn} = 3 THEN ${trade.amountOut} ELSE 0 END)
+      DESC
+    `,
+    )
+
   const investedBRL = fullInvestingBTC.find((item) => item.coinName === 'brl')
 
   const investedUSDC = fullInvestingBTC.find((item) => item.coinName === 'usdc')
+
+  const investedSOLBRL = fullInvestingSOL.find((item) => item.coinName === 'brl')
+
+  const investedSOLUSDC = fullInvestingSOL.find((item) => item.coinName === 'usdc')
 
   const netInvestBTCAllCoins =
     (investedBRL?.netInvestment as number) +
     (investedUSDC?.netInvestment as number) * coinQuotes['usd-coin'].brl
 
+  const netInvestSOLAllCoins =
+    (investedSOLBRL?.netInvestment as number) +
+    (investedSOLUSDC?.netInvestment as number) * coinQuotes['usd-coin'].brl
+
   const output: IDashEndpoint = {
     quote: {
       btc: coinQuotes.bitcoin.usd,
+      sol: coinQuotes.solana.usd,
     },
     hold: {
       btc: Number(walletBTC?.amount),
+      sol: Number(walletSOL?.amount),
     },
     balance: {
       btc: balanceBTC,
+      sol: balanceSOL,
     },
     investing: {
       totalNet: totalInvestingNet,
       totalBTCNet: netInvestBTCAllCoins,
+      totalSOLNet: netInvestSOLAllCoins,
     },
     profit: {
       btc: {
         value: balanceBTC - netInvestBTCAllCoins,
         hasProfit: balanceBTC > netInvestBTCAllCoins,
         percentage: parseInt(String((balanceBTC / netInvestBTCAllCoins) * 100)),
+      },
+      sol: {
+        value: balanceSOL - netInvestSOLAllCoins,
+        hasProfit: balanceSOL > netInvestSOLAllCoins,
+        percentage: parseInt(String((balanceSOL / netInvestSOLAllCoins) * 100)),
       },
     },
   }

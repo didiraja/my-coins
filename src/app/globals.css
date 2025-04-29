@@ -29,7 +29,7 @@ h1 {
 }
 
 .coin-title {
-  @apply flex gap-2 mb-4;
+  @apply flex items-center gap-2 mb-4;
 
   .label {
     @apply text-3xl font-semibold /* border-b-1 border-white/50 */;

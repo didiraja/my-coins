@@ -1,3 +1,8 @@
+type AmountByCoin = {
+  btc: number
+  sol: number
+}
+
 type Profit = {
   value: number
   hasProfit: boolean
@@ -5,20 +10,16 @@ type Profit = {
 }
 
 export type IDashEndpoint = {
-  quote: {
-    btc: number
-  }
-  hold: {
-    btc: number
-  }
-  balance: {
-    btc: number
-  }
+  quote: AmountByCoin
+  hold: AmountByCoin
+  balance: AmountByCoin
   investing: {
     totalNet: number
     totalBTCNet: number
+    totalSOLNet: number
   }
   profit: {
     btc: Profit
+    sol: Profit
   }
 }
