@@ -1,5 +1,5 @@
+import { IDashEndpoint } from '@/types'
 import axios, { AxiosResponse } from 'axios'
-import { IDashEndpoint } from './endpoints'
 
 export const GetCoinsQuotes = async () => {
   try {
