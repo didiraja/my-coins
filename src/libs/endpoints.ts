@@ -2,25 +2,7 @@ import { PayloadRequest } from 'payload'
 import { eq, sql, sum } from '@payloadcms/db-sqlite/drizzle'
 import { coin, trade, wallet } from '@/payload-generated-schema'
 import { GetCoinsQuotes } from './request'
-
-export type IDashEndpoint = {
-  quote: {
-    btc: number
-  }
-  hold: {
-    btc: number
-  }
-  balance: {
-    btc: number
-  }
-  investing: {
-    totalNet: number
-    totalBTCNet: number
-  }
-  profit: {
-    btc: number
-  }
-}
+import { IDashEndpoint } from '@/types'
 
 export const DashboardEndpoint = async (req: PayloadRequest) => {
   const secretToken = req.headers.get('x-secret-token')
@@ -130,11 +112,13 @@ export const DashboardEndpoint = async (req: PayloadRequest) => {
     investing: {
       totalNet: totalInvestingNet,
       totalBTCNet: netInvestBTCAllCoins,
-      // all money invested on btc, by coin:
-      // SELECT coin_in_id, sum(amount_in) as sum_coin FROM trade where coin_out_id = '1' group by coin_in_id;
     },
     profit: {
-      btc: balanceBTC - netInvestBTCAllCoins,
+      btc: {
+        value: balanceBTC - netInvestBTCAllCoins,
+        hasProfit: balanceBTC > netInvestBTCAllCoins,
+        percentage: parseInt(String((balanceBTC / netInvestBTCAllCoins) * 100)),
+      },
     },
   }
 
