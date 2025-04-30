@@ -31,13 +31,10 @@ export default async function HomePage() {
       <div className="title">
         <h1>My Coins</h1>
       </div>
-      {dashValues && (
-        <>
-          <CoinPortfolio coin="btc" color="bg-orange-400" data={dashValues} />
-          <CoinPortfolio coin="sol" color="bg-indigo-400" data={dashValues} />
-          <CoinPortfolio coin="aave" color="bg-teal-400" data={dashValues} />
-        </>
-      )}
+      {dashValues &&
+        dashValues?.v2.portfolio.map((item) => (
+          <CoinPortfolio key={item.symbol} color={item.color} data={item} />
+        ))}
       <div className="list">
         <ul>
           {tradesList.docs.map((trade) => {
