@@ -1,4 +1,4 @@
-type AmountByCoin = {
+export type AmountByCoin = {
   btc: number
   sol: number
   aave: number
