@@ -216,6 +216,52 @@ export const DashboardEndpoint = async (req: PayloadRequest) => {
   const netInvestAAVEAllCoins = investedAAVEBRL?.netInvestment as number
 
   const output: IDashEndpoint = {
+    v2: {
+      portfolio: [
+        {
+          name: 'Bitcoin',
+          symbol: 'BTC',
+          color: 'bg-orange-400',
+          price: coinQuotes.bitcoin.usd,
+          hold: Number(walletBTC?.amount),
+          balance: balanceBTC,
+          investing: netInvestBTCAllCoins,
+          profit: {
+            value: balanceBTC - netInvestBTCAllCoins,
+            hasProfit: balanceBTC > netInvestBTCAllCoins,
+            percentage: parseInt(String((balanceBTC / netInvestBTCAllCoins) * 100)),
+          },
+        },
+        {
+          name: 'Solana',
+          symbol: 'SOL',
+          color: 'bg-indigo-400',
+          price: coinQuotes.solana.usd,
+          hold: Number(walletSOL?.amount),
+          balance: balanceSOL,
+          investing: netInvestSOLAllCoins,
+          profit: {
+            value: balanceSOL - netInvestSOLAllCoins,
+            hasProfit: balanceSOL > netInvestSOLAllCoins,
+            percentage: parseInt(String((balanceSOL / netInvestSOLAllCoins) * 100)),
+          },
+        },
+        {
+          name: 'Aave',
+          symbol: 'AAVE',
+          color: 'bg-teal-400',
+          price: coinQuotes.aave.usd,
+          hold: Number(walletAAVE?.amount),
+          balance: balanceAAVE,
+          investing: netInvestAAVEAllCoins,
+          profit: {
+            value: balanceAAVE - netInvestAAVEAllCoins,
+            hasProfit: balanceAAVE > netInvestAAVEAllCoins,
+            percentage: parseInt(String((balanceAAVE / netInvestAAVEAllCoins) * 100)),
+          },
+        },
+      ],
+    },
     quote: {
       btc: coinQuotes.bitcoin.usd,
       sol: coinQuotes.solana.usd,

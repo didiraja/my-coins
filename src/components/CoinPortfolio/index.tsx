@@ -2,40 +2,35 @@
 
 import { formatUSD } from '@/libs/format'
 import Card from '../Card'
-import { AmountByCoin, IDashEndpoint } from '@/types'
+import { Portfolio } from '@/types'
 
-const CoinPortfolio = ({
-  coin,
-  color = 'bg-gray-400',
-  data,
-}: {
-  coin: keyof AmountByCoin
-  color: string
-  data: IDashEndpoint
-}) => {
+const CoinPortfolio = ({ color = 'bg-gray-400', data }: { color: string; data: Portfolio }) => {
   return (
     <div className="coin-wrapper">
       <div className="coin-title">
         <div className={`coin-icon ${color}`} />
         <p className="label">
-          Transfero <span className="text-sm">BRZ {data?.hold[coin]}</span>
+          {data.name}{' '}
+          <span className="text-sm">
+            {data.symbol} {data.hold}
+          </span>
         </p>
       </div>
 
       <div className="wallet-data">
-        <Card label="Token Price">{formatUSD(data?.quote[coin])}</Card>
+        <Card label="Token Price">{formatUSD(data.price)}</Card>
 
         <Card
           label="Profit"
           performance
-          hasProfit={data?.profit[coin].hasProfit}
-          reference={`+${data?.profit[coin].percentage}%`}
+          hasProfit={data.profit.hasProfit}
+          reference={`+${data.profit.percentage}%`}
         >
-          {formatUSD(data?.profit[coin].value)}
+          {formatUSD(data.profit.value)}
         </Card>
 
-        <Card label="Balance" performance hasProfit={data?.profit[coin].hasProfit}>
-          {formatUSD(data?.balance[coin])}
+        <Card label="Balance" performance hasProfit={data.profit.hasProfit}>
+          {formatUSD(data.balance)}
         </Card>
       </div>
     </div>
