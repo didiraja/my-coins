@@ -3,23 +3,28 @@
 const Card = ({
   label,
   children,
-  showProfit = false,
-  profit,
+  performance = false,
+  hasProfit = false,
+  reference,
 }: {
   label: string
   children: string | number
-  showProfit?: boolean
-  profit?: boolean
+  hasProfit?: boolean
+  performance?: boolean
+  reference?: string
 }) => {
   return (
-    <div className="bg-white text-black rounded-md p-2 text-xl">
-      <p className="font-semibold">{label}</p>
-
-      {showProfit ? (
-        <p className={profit ? 'text-green-500' : 'text-red-500'}>{children}</p>
-      ) : (
-        <p className="">{children}</p>
-      )}
+    <div className="card">
+      <p className="label">{label}</p>
+      <p className={`value ${performance ? (hasProfit ? 'text-green-500' : 'text-red-500') : ''}`}>
+        {children}
+        {reference && (
+          <>
+            {' '}
+            <span className="text-sm">{reference}</span>
+          </>
+        )}
+      </p>
     </div>
   )
 }

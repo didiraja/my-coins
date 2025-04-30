@@ -41,29 +41,20 @@ export default async function HomePage() {
             </div>
 
             <div className="wallet-data">
-              <div className="card">
-                <p className="label">Token Price</p>
-                <p className="value">{formatUSD(dashValues?.quote.btc)}</p>
-              </div>
+              <Card label="Token Price">{formatUSD(dashValues?.quote.btc)}</Card>
 
-              <div className="card">
-                <p className="label">Profit</p>
-                <p
-                  className={`value ${dashValues?.profit.btc.hasProfit ? 'text-green-500' : 'text-red-500'}`}
-                >
-                  {formatBRL(dashValues?.profit.btc.value)}{' '}
-                  <span className="text-sm">+{dashValues?.profit.btc.percentage}%</span>
-                </p>
-              </div>
+              <Card
+                label="Profit"
+                performance
+                hasProfit={dashValues?.profit.btc.hasProfit}
+                reference={`+${dashValues?.profit.btc.percentage}%`}
+              >
+                {formatUSD(dashValues?.profit.btc.value)}
+              </Card>
 
-              <div className="card">
-                <p className="label">Balance</p>
-                <p
-                  className={`value ${dashValues?.profit.btc.hasProfit ? 'text-green-500' : 'text-red-500'}`}
-                >
-                  {formatBRL(dashValues?.balance.btc)}
-                </p>
-              </div>
+              <Card label="Balance" performance hasProfit={dashValues?.profit.btc.hasProfit}>
+                {formatUSD(dashValues?.balance.btc)}
+              </Card>
             </div>
           </div>
           <div className="coin-wrapper">
@@ -75,32 +66,20 @@ export default async function HomePage() {
             </div>
 
             <div className="wallet-data">
-              <div className="card">
-                <p className="label">Token Price</p>
-                <p className="value">{formatUSD(dashValues?.quote.sol)}</p>
-              </div>
+              <Card label="Token Price">{formatUSD(dashValues?.quote.sol)}</Card>
 
-              <div className="card">
-                <p className="label">Profit</p>
-                <p
-                  className={`value ${dashValues?.profit.sol.hasProfit ? 'text-green-500' : 'text-red-500'}`}
-                >
-                  {formatBRL(dashValues?.profit.sol.value)}{' '}
-                  <span className="text-sm">
-                    {dashValues?.profit.sol.hasProfit ? '+' : '-'}
-                    {dashValues?.profit.sol.percentage}%
-                  </span>
-                </p>
-              </div>
+              <Card
+                label="Profit"
+                performance
+                hasProfit={dashValues?.profit.sol.hasProfit}
+                reference={`+${dashValues?.profit.sol.percentage}%`}
+              >
+                {formatUSD(dashValues?.profit.sol.value)}
+              </Card>
 
-              <div className="card">
-                <p className="label">Balance</p>
-                <p
-                  className={`value ${dashValues?.profit.sol.hasProfit ? 'text-green-500' : 'text-red-500'}`}
-                >
-                  {formatBRL(dashValues?.balance.sol)}
-                </p>
-              </div>
+              <Card label="Balance" performance hasProfit={dashValues?.profit.sol.hasProfit}>
+                {formatUSD(dashValues?.balance.sol)}
+              </Card>
             </div>
           </div>
           <div className="coin-wrapper">
@@ -112,32 +91,20 @@ export default async function HomePage() {
             </div>
 
             <div className="wallet-data">
-              <div className="card">
-                <p className="label">Token Price</p>
-                <p className="value">{formatUSD(dashValues?.quote.aave)}</p>
-              </div>
+              <Card label="Token Price">{formatUSD(dashValues?.quote.aave)}</Card>
 
-              <div className="card">
-                <p className="label">Profit</p>
-                <p
-                  className={`value ${dashValues?.profit.aave.hasProfit ? 'text-green-500' : 'text-red-500'}`}
-                >
-                  {formatBRL(dashValues?.profit.aave.value)}{' '}
-                  <span className="text-sm">
-                    {dashValues?.profit.aave.hasProfit ? '+' : '-'}
-                    {dashValues?.profit.aave.percentage}%
-                  </span>
-                </p>
-              </div>
+              <Card
+                label="Profit"
+                performance
+                hasProfit={dashValues?.profit.aave.hasProfit}
+                reference={`+${dashValues?.profit.aave.percentage}%`}
+              >
+                {formatUSD(dashValues?.profit.aave.value)}
+              </Card>
 
-              <div className="card">
-                <p className="label">Balance</p>
-                <p
-                  className={`value ${dashValues?.profit.aave.hasProfit ? 'text-green-500' : 'text-red-500'}`}
-                >
-                  {formatBRL(dashValues?.balance.aave)}
-                </p>
-              </div>
+              <Card label="Balance" performance hasProfit={dashValues?.profit.aave.hasProfit}>
+                {formatUSD(dashValues?.balance.aave)}
+              </Card>
             </div>
           </div>
         </>
