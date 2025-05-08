@@ -3,6 +3,7 @@
 import { formatBRL, formatUSD } from '@/libs/format'
 import Card from '../Card'
 import { Portfolio } from '@/types'
+import TargetPrice from '../Slot/Reference'
 
 const CoinPortfolio = ({ color = 'bg-gray-400', data }: { color: string; data: Portfolio }) => {
   return (
@@ -18,7 +19,12 @@ const CoinPortfolio = ({ color = 'bg-gray-400', data }: { color: string; data: P
       </div>
 
       <div className="wallet-data">
-        <Card label="Token Price">{formatUSD(data.price)}</Card>
+        <Card
+          label="Token Price"
+          reference={<TargetPrice value={data.targetPrice ? formatUSD(data.targetPrice) : false} />}
+        >
+          {formatUSD(data.price)}
+        </Card>
 
         <Card
           label="Profit"

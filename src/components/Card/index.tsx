@@ -1,5 +1,7 @@
 'use client'
 
+import { ReactNode } from 'react'
+
 const Card = ({
   label,
   children,
@@ -11,7 +13,7 @@ const Card = ({
   children: string | number
   hasProfit?: boolean
   performance?: boolean
-  reference?: string
+  reference?: string | ReactNode
 }) => {
   return (
     <div className="card">

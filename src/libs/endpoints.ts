@@ -1,6 +1,6 @@
 import { PayloadRequest } from 'payload'
-import { eq, sql, sum } from '@payloadcms/db-sqlite/drizzle'
-import { coin, trade, wallet } from '@/payload-generated-schema'
+import { eq, sum } from '@payloadcms/db-sqlite/drizzle'
+import { trade, wallet } from '@/payload-generated-schema'
 import { GetCoinsQuotes } from './request'
 import { IDashEndpoint } from '@/types'
 import { getInvestmentSummaryByCoin } from './queries/getInvestmentSummaryByCoin'
@@ -32,6 +32,14 @@ export const DashboardEndpoint = async (req: PayloadRequest) => {
     .where(eq(trade.coinOut, 8))
 
   const coinQuotes = await GetCoinsQuotes()
+
+  // MOCK QUOTES
+  // const target = 2700
+  // const dollarQuote = coinQuotes.[coin].brl / coinQuotes.[coin].usd
+  // coinQuotes.[coin] = {
+  //   usd: target,
+  //   brl: target * 5.68,
+  // }
 
   const sumBRLIn = Number(querySumBRLIn[0].result)
   const sumBRLOut = Number(querySumBRLOut[0].result)
@@ -101,6 +109,10 @@ export const DashboardEndpoint = async (req: PayloadRequest) => {
   // -----
 
   const output: IDashEndpoint = {
+    total: {
+      investing: sumBRLIn,
+      net: totalInvestingNet,
+    },
     portfolio: [
       {
         name: 'Bitcoin',
@@ -121,6 +133,7 @@ export const DashboardEndpoint = async (req: PayloadRequest) => {
         symbol: 'ETH',
         color: 'bg-blue-400',
         price: coinQuotes.ethereum.usd,
+        targetPrice: 2700,
         hold: Number(walletETH?.amount),
         balance: balanceETH,
         investing: netInvestETH,
@@ -135,6 +148,7 @@ export const DashboardEndpoint = async (req: PayloadRequest) => {
         symbol: 'SOL',
         color: 'bg-indigo-400',
         price: coinQuotes.solana.usd,
+        targetPrice: 170,
         hold: Number(walletSOL?.amount),
         balance: balanceSOL,
         investing: netInvestSOL,
@@ -149,6 +163,7 @@ export const DashboardEndpoint = async (req: PayloadRequest) => {
         symbol: 'AAVE',
         color: 'bg-teal-400',
         price: coinQuotes.aave.usd,
+        targetPrice: 310,
         hold: Number(walletAAVE?.amount),
         balance: balanceAAVE,
         investing: netInvestAAVE,

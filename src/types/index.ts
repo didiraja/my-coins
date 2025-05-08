@@ -15,6 +15,7 @@ export type Portfolio = {
   symbol: string
   color: string
   price: number
+  targetPrice?: number
   hold: number
   balance: number
   investing: number
@@ -22,5 +23,9 @@ export type Portfolio = {
 }
 
 export type IDashEndpoint = {
+  total: {
+    investing: number
+    net: number
+  }
   portfolio: Portfolio[]
 }
