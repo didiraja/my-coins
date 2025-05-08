@@ -32,7 +32,7 @@ export default async function HomePage() {
         <h1>My Coins</h1>
       </div>
       {dashValues &&
-        dashValues?.v2.portfolio.map((item) => (
+        dashValues?.portfolio.map((item) => (
           <CoinPortfolio key={item.symbol} color={item.color} data={item} />
         ))}
       <div className="list">

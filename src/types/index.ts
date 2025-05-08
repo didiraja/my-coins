@@ -22,21 +22,5 @@ export type Portfolio = {
 }
 
 export type IDashEndpoint = {
-  v2: {
-    portfolio: Portfolio[]
-  }
-  quote: AmountByCoin
-  hold: AmountByCoin
-  balance: AmountByCoin
-  investing: {
-    totalNet: number
-    totalBTCNet: number
-    totalSOLNet: number
-    totalAAVENet: number
-  }
-  profit: {
-    btc: Profit
-    sol: Profit
-    aave: Profit
-  }
+  portfolio: Portfolio[]
 }

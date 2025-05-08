@@ -3,6 +3,7 @@ import { eq, sql, sum } from '@payloadcms/db-sqlite/drizzle'
 import { coin, trade, wallet } from '@/payload-generated-schema'
 import { GetCoinsQuotes } from './request'
 import { IDashEndpoint } from '@/types'
+import { getInvestmentSummaryByCoin } from './queries/getInvestmentSummaryByCoin'
 
 export const DashboardEndpoint = async (req: PayloadRequest) => {
   const secretToken = req.headers.get('x-secret-token')
@@ -51,255 +52,77 @@ export const DashboardEndpoint = async (req: PayloadRequest) => {
 
   const balanceAAVE = Number(walletAAVE?.amount) * coinQuotes.aave.brl
 
-  const fullInvestingBTC = await req.payload.db.drizzle
-    .select({
-      coinName: coin.coin,
-      totalInvested: sql<number>`
-      SUM(CASE WHEN ${trade.coinOut} = 1 THEN ${trade.amountIn} ELSE 0 END)
-    `,
-      totalWithdrawn: sql<number>`
-      SUM(CASE WHEN ${trade.coinIn} = 1 THEN ${trade.amountOut} ELSE 0 END)
-    `,
-      netInvestment: sql<number>`
-      SUM(CASE WHEN ${trade.coinOut} = 1 THEN ${trade.amountIn} ELSE 0 END)
-      -
-      SUM(CASE WHEN ${trade.coinIn} = 1 THEN ${trade.amountOut} ELSE 0 END)
-    `,
-    })
-    .from(trade)
-    .innerJoin(
-      coin,
-      sql`
-      ${coin.id} = CASE
-        WHEN ${trade.coinOut} = 1 THEN ${trade.coinIn}
-        WHEN ${trade.coinIn} = 1 THEN ${trade.coinOut}
-      END
-    `,
-    )
-    .where(
-      sql`
-      ${trade.coinOut} = 1 OR ${trade.coinIn} = 1
-    `,
-    )
-    .groupBy(coin.coin)
-    .having(
-      sql`
-      SUM(CASE WHEN ${trade.coinOut} = 1 THEN ${trade.amountIn} ELSE 0 END)
-      -
-      SUM(CASE WHEN ${trade.coinIn} = 1 THEN ${trade.amountOut} ELSE 0 END)
-      != 0
-    `,
-    )
-    .orderBy(
-      sql`
-      SUM(CASE WHEN ${trade.coinOut} = 1 THEN ${trade.amountIn} ELSE 0 END)
-      -
-      SUM(CASE WHEN ${trade.coinIn} = 1 THEN ${trade.amountOut} ELSE 0 END)
-      DESC
-    `,
-    )
+  const investmentBTC = await getInvestmentSummaryByCoin({ coinId: 1, req })
 
-  const fullInvestingSOL = await req.payload.db.drizzle
-    .select({
-      coinName: coin.coin,
-      totalInvested: sql<number>`
-      SUM(CASE WHEN ${trade.coinOut} = 3 THEN ${trade.amountIn} ELSE 0 END)
-    `,
-      totalWithdrawn: sql<number>`
-      SUM(CASE WHEN ${trade.coinIn} = 3 THEN ${trade.amountOut} ELSE 0 END)
-    `,
-      netInvestment: sql<number>`
-      SUM(CASE WHEN ${trade.coinOut} = 3 THEN ${trade.amountIn} ELSE 0 END)
-      -
-      SUM(CASE WHEN ${trade.coinIn} = 3 THEN ${trade.amountOut} ELSE 0 END)
-    `,
-    })
-    .from(trade)
-    .innerJoin(
-      coin,
-      sql`
-      ${coin.id} = CASE
-        WHEN ${trade.coinOut} = 3 THEN ${trade.coinIn}
-        WHEN ${trade.coinIn} = 3 THEN ${trade.coinOut}
-      END
-    `,
-    )
-    .where(
-      sql`
-      ${trade.coinOut} = 3 OR ${trade.coinIn} = 3
-    `,
-    )
-    .groupBy(coin.coin)
-    .having(
-      sql`
-      SUM(CASE WHEN ${trade.coinOut} = 3 THEN ${trade.amountIn} ELSE 0 END)
-      -
-      SUM(CASE WHEN ${trade.coinIn} = 3 THEN ${trade.amountOut} ELSE 0 END)
-      != 0
-    `,
-    )
-    .orderBy(
-      sql`
-      SUM(CASE WHEN ${trade.coinOut} = 3 THEN ${trade.amountIn} ELSE 0 END)
-      -
-      SUM(CASE WHEN ${trade.coinIn} = 3 THEN ${trade.amountOut} ELSE 0 END)
-      DESC
-    `,
-    )
+  const BTCbyBRL = investmentBTC.find((item) => item.coinName === 'brl')
 
-  const fullInvestingAAVE = await req.payload.db.drizzle
-    .select({
-      coinName: coin.coin,
-      totalInvested: sql<number>`
-      SUM(CASE WHEN ${trade.coinOut} = 7 THEN ${trade.amountIn} ELSE 0 END)
-    `,
-      totalWithdrawn: sql<number>`
-      SUM(CASE WHEN ${trade.coinIn} = 7 THEN ${trade.amountOut} ELSE 0 END)
-    `,
-      netInvestment: sql<number>`
-      SUM(CASE WHEN ${trade.coinOut} = 7 THEN ${trade.amountIn} ELSE 0 END)
-      -
-      SUM(CASE WHEN ${trade.coinIn} = 7 THEN ${trade.amountOut} ELSE 0 END)
-    `,
-    })
-    .from(trade)
-    .innerJoin(
-      coin,
-      sql`
-      ${coin.id} = CASE
-        WHEN ${trade.coinOut} = 7 THEN ${trade.coinIn}
-        WHEN ${trade.coinIn} = 7 THEN ${trade.coinOut}
-      END
-    `,
-    )
-    .where(
-      sql`
-      ${trade.coinOut} = 7 OR ${trade.coinIn} = 7
-    `,
-    )
-    .groupBy(coin.coin)
-    .having(
-      sql`
-      SUM(CASE WHEN ${trade.coinOut} = 7 THEN ${trade.amountIn} ELSE 0 END)
-      -
-      SUM(CASE WHEN ${trade.coinIn} = 7 THEN ${trade.amountOut} ELSE 0 END)
-      != 0
-    `,
-    )
-    .orderBy(
-      sql`
-      SUM(CASE WHEN ${trade.coinOut} = 7 THEN ${trade.amountIn} ELSE 0 END)
-      -
-      SUM(CASE WHEN ${trade.coinIn} = 7 THEN ${trade.amountOut} ELSE 0 END)
-      DESC
-    `,
-    )
+  const BTCbyUSDC = investmentBTC.find((item) => item.coinName === 'usdc')
 
-  const investedBRL = fullInvestingBTC.find((item) => item.coinName === 'brl')
+  const netInvestBTC =
+    (BTCbyBRL?.netInvestment as number) +
+    (BTCbyUSDC?.netInvestment as number) * coinQuotes['usd-coin'].brl
 
-  const investedUSDC = fullInvestingBTC.find((item) => item.coinName === 'usdc')
+  const investmentSOL = await getInvestmentSummaryByCoin({ coinId: 3, req })
 
-  const investedSOLBRL = fullInvestingSOL.find((item) => item.coinName === 'brl')
+  const SOLbyBRL = investmentSOL.find((item) => item.coinName === 'brl')
 
-  const investedSOLUSDC = fullInvestingSOL.find((item) => item.coinName === 'usdc')
+  const SOLbyUSDC = investmentSOL.find((item) => item.coinName === 'usdc')
 
-  const investedAAVEBRL = fullInvestingAAVE.find((item) => item.coinName === 'brl')
+  const netInvestSOL =
+    (SOLbyBRL?.netInvestment as number) +
+    (SOLbyUSDC?.netInvestment as number) * coinQuotes['usd-coin'].brl
 
-  const netInvestBTCAllCoins =
-    (investedBRL?.netInvestment as number) +
-    (investedUSDC?.netInvestment as number) * coinQuotes['usd-coin'].brl
+  const investmentAAVE = await getInvestmentSummaryByCoin({ coinId: 7, req })
 
-  const netInvestSOLAllCoins =
-    (investedSOLBRL?.netInvestment as number) +
-    (investedSOLUSDC?.netInvestment as number) * coinQuotes['usd-coin'].brl
+  const AAVEbyBRL = investmentAAVE.find((item) => item.coinName === 'brl')
 
-  const netInvestAAVEAllCoins = investedAAVEBRL?.netInvestment as number
+  const netInvestAAVE = AAVEbyBRL?.netInvestment as number
 
   const output: IDashEndpoint = {
-    v2: {
-      portfolio: [
-        {
-          name: 'Bitcoin',
-          symbol: 'BTC',
-          color: 'bg-orange-400',
-          price: coinQuotes.bitcoin.usd,
-          hold: Number(walletBTC?.amount),
-          balance: balanceBTC,
-          investing: netInvestBTCAllCoins,
-          profit: {
-            value: balanceBTC - netInvestBTCAllCoins,
-            hasProfit: balanceBTC > netInvestBTCAllCoins,
-            percentage: parseInt(String((balanceBTC / netInvestBTCAllCoins) * 100)),
-          },
+    portfolio: [
+      {
+        name: 'Bitcoin',
+        symbol: 'BTC',
+        color: 'bg-orange-400',
+        price: coinQuotes.bitcoin.usd,
+        hold: Number(walletBTC?.amount),
+        balance: balanceBTC,
+        investing: netInvestBTC,
+        profit: {
+          value: balanceBTC - netInvestBTC,
+          hasProfit: balanceBTC > netInvestBTC,
+          percentage: parseInt(String((balanceBTC / netInvestBTC) * 100)),
         },
-        {
-          name: 'Solana',
-          symbol: 'SOL',
-          color: 'bg-indigo-400',
-          price: coinQuotes.solana.usd,
-          hold: Number(walletSOL?.amount),
-          balance: balanceSOL,
-          investing: netInvestSOLAllCoins,
-          profit: {
-            value: balanceSOL - netInvestSOLAllCoins,
-            hasProfit: balanceSOL > netInvestSOLAllCoins,
-            percentage: parseInt(String((balanceSOL / netInvestSOLAllCoins) * 100)),
-          },
+      },
+      {
+        name: 'Solana',
+        symbol: 'SOL',
+        color: 'bg-indigo-400',
+        price: coinQuotes.solana.usd,
+        hold: Number(walletSOL?.amount),
+        balance: balanceSOL,
+        investing: netInvestSOL,
+        profit: {
+          value: balanceSOL - netInvestSOL,
+          hasProfit: balanceSOL > netInvestSOL,
+          percentage: parseInt(String((balanceSOL / netInvestSOL) * 100)),
         },
-        {
-          name: 'Aave',
-          symbol: 'AAVE',
-          color: 'bg-teal-400',
-          price: coinQuotes.aave.usd,
-          hold: Number(walletAAVE?.amount),
-          balance: balanceAAVE,
-          investing: netInvestAAVEAllCoins,
-          profit: {
-            value: balanceAAVE - netInvestAAVEAllCoins,
-            hasProfit: balanceAAVE > netInvestAAVEAllCoins,
-            percentage: parseInt(String((balanceAAVE / netInvestAAVEAllCoins) * 100)),
-          },
+      },
+      {
+        name: 'Aave',
+        symbol: 'AAVE',
+        color: 'bg-teal-400',
+        price: coinQuotes.aave.usd,
+        hold: Number(walletAAVE?.amount),
+        balance: balanceAAVE,
+        investing: netInvestAAVE,
+        profit: {
+          value: balanceAAVE - netInvestAAVE,
+          hasProfit: balanceAAVE > netInvestAAVE,
+          percentage: parseInt(String((balanceAAVE / netInvestAAVE) * 100)),
         },
-      ],
-    },
-    quote: {
-      btc: coinQuotes.bitcoin.usd,
-      sol: coinQuotes.solana.usd,
-      aave: coinQuotes.aave.usd,
-    },
-    hold: {
-      btc: Number(walletBTC?.amount),
-      sol: Number(walletSOL?.amount),
-      aave: Number(walletAAVE?.amount),
-    },
-    balance: {
-      btc: balanceBTC,
-      sol: balanceSOL,
-      aave: balanceAAVE,
-    },
-    investing: {
-      totalNet: totalInvestingNet,
-      totalBTCNet: netInvestBTCAllCoins,
-      totalSOLNet: netInvestSOLAllCoins,
-      totalAAVENet: netInvestAAVEAllCoins,
-    },
-    profit: {
-      btc: {
-        value: balanceBTC - netInvestBTCAllCoins,
-        hasProfit: balanceBTC > netInvestBTCAllCoins,
-        percentage: parseInt(String((balanceBTC / netInvestBTCAllCoins) * 100)),
       },
-      sol: {
-        value: balanceSOL - netInvestSOLAllCoins,
-        hasProfit: balanceSOL > netInvestSOLAllCoins,
-        percentage: parseInt(String((balanceSOL / netInvestSOLAllCoins) * 100)),
-      },
-      aave: {
-        value: balanceAAVE - netInvestAAVEAllCoins,
-        hasProfit: balanceAAVE > netInvestAAVEAllCoins,
-        percentage: parseInt(String((balanceAAVE / netInvestAAVEAllCoins) * 100)),
-      },
-    },
+    ],
   }
 
   return Response.json(output)
