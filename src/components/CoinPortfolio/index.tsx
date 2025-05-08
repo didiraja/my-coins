@@ -1,6 +1,6 @@
 'use client'
 
-import { formatUSD } from '@/libs/format'
+import { formatBRL, formatUSD } from '@/libs/format'
 import Card from '../Card'
 import { Portfolio } from '@/types'
 
@@ -26,11 +26,11 @@ const CoinPortfolio = ({ color = 'bg-gray-400', data }: { color: string; data: P
           hasProfit={data.profit.hasProfit}
           reference={`+${data.profit.percentage}%`}
         >
-          {formatUSD(data.profit.value)}
+          {formatBRL(data.profit.value)}
         </Card>
 
         <Card label="Balance" performance hasProfit={data.profit.hasProfit}>
-          {formatUSD(data.balance)}
+          {formatBRL(data.balance)}
         </Card>
       </div>
     </div>
