@@ -42,15 +42,7 @@ export const DashboardEndpoint = async (req: PayloadRequest) => {
 
   const walletBTC = Wallets.find((item) => item.coin === 1)
 
-  const walletSOL = Wallets.find((item) => item.coin === 3)
-
-  const walletAAVE = Wallets.find((item) => item.coin === 7)
-
   const balanceBTC = Number(walletBTC?.amount) * coinQuotes.bitcoin.brl
-
-  const balanceSOL = Number(walletSOL?.amount) * coinQuotes.solana.brl
-
-  const balanceAAVE = Number(walletAAVE?.amount) * coinQuotes.aave.brl
 
   const investmentBTC = await getInvestmentSummaryByCoin({ coinId: 1, req })
 
@@ -62,6 +54,28 @@ export const DashboardEndpoint = async (req: PayloadRequest) => {
     (BTCbyBRL?.netInvestment as number) +
     (BTCbyUSDC?.netInvestment as number) * coinQuotes['usd-coin'].brl
 
+  // -----
+
+  const walletETH = Wallets.find((item) => item.coin === 2)
+
+  const balanceETH = Number(walletETH?.amount) * coinQuotes.ethereum.brl
+
+  const investmentETH = await getInvestmentSummaryByCoin({ coinId: 2, req })
+
+  const ETHbyBRL = investmentETH.find((item) => item.coinName === 'brl')
+
+  const ETHbyUSDC = investmentETH.find((item) => item.coinName === 'usdc')
+
+  const netInvestETH =
+    (ETHbyBRL?.netInvestment as number) +
+    (ETHbyUSDC?.netInvestment as number) * coinQuotes['usd-coin'].brl
+
+  // -----
+
+  const walletSOL = Wallets.find((item) => item.coin === 3)
+
+  const balanceSOL = Number(walletSOL?.amount) * coinQuotes.solana.brl
+
   const investmentSOL = await getInvestmentSummaryByCoin({ coinId: 3, req })
 
   const SOLbyBRL = investmentSOL.find((item) => item.coinName === 'brl')
@@ -72,11 +86,19 @@ export const DashboardEndpoint = async (req: PayloadRequest) => {
     (SOLbyBRL?.netInvestment as number) +
     (SOLbyUSDC?.netInvestment as number) * coinQuotes['usd-coin'].brl
 
+  // -----
+
+  const walletAAVE = Wallets.find((item) => item.coin === 7)
+
+  const balanceAAVE = Number(walletAAVE?.amount) * coinQuotes.aave.brl
+
   const investmentAAVE = await getInvestmentSummaryByCoin({ coinId: 7, req })
 
   const AAVEbyBRL = investmentAAVE.find((item) => item.coinName === 'brl')
 
   const netInvestAAVE = AAVEbyBRL?.netInvestment as number
+
+  // -----
 
   const output: IDashEndpoint = {
     portfolio: [
@@ -92,6 +114,20 @@ export const DashboardEndpoint = async (req: PayloadRequest) => {
           value: balanceBTC - netInvestBTC,
           hasProfit: balanceBTC > netInvestBTC,
           percentage: parseInt(String((balanceBTC / netInvestBTC) * 100)),
+        },
+      },
+      {
+        name: 'Ethereum',
+        symbol: 'ETH',
+        color: 'bg-blue-400',
+        price: coinQuotes.ethereum.usd,
+        hold: Number(walletETH?.amount),
+        balance: balanceETH,
+        investing: netInvestETH,
+        profit: {
+          value: balanceETH - netInvestETH,
+          hasProfit: balanceETH > netInvestETH,
+          percentage: parseInt(String((balanceETH / netInvestETH) * 100)),
         },
       },
       {
