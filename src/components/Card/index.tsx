@@ -18,7 +18,9 @@ const Card = ({
   return (
     <div className="card">
       <p className="label">{label}</p>
-      <p className={`value ${performance ? (hasProfit ? 'text-green-500' : 'text-red-500') : ''}`}>
+      <p
+        className={`value flex justify-between items-baseline ${performance ? (hasProfit ? 'text-green-500' : 'text-red-500') : ''}`}
+      >
         {children}
         {reference && (
           <>
