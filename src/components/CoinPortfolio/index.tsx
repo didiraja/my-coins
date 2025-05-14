@@ -36,23 +36,25 @@ const CoinPortfolio = ({ color = 'bg-gray-400', data }: { color: string; data: P
           {formatUSD(data.price)}
         </Card>
 
-        <Card
-          label="Profit"
-          performance
-          hasProfit={data.profit.hasProfit}
-          reference={
-            <div className="reference">
-              <p>Profit:</p>
-              <TargetPrice className={profitClassName(data.profit.hasProfit)}>
-                +${data.profit.percentage}%
-              </TargetPrice>
-            </div>
-          }
-        >
-          {formatBRL(data.profit.value)}
-        </Card>
+        {data.profit && (
+          <Card
+            label="Profit"
+            performance
+            hasProfit={data.profit?.hasProfit}
+            reference={
+              <div className="reference">
+                <p>Profit:</p>
+                <TargetPrice className={profitClassName(data.profit?.hasProfit)}>
+                  +${data.profit?.percentage}%
+                </TargetPrice>
+              </div>
+            }
+          >
+            {formatBRL(data.profit?.value)}
+          </Card>
+        )}
 
-        <Card label="Balance" performance hasProfit={data.profit.hasProfit}>
+        <Card label="Balance" performance={Boolean(data.profit)} hasProfit={data.profit?.hasProfit}>
           {formatBRL(data.balance)}
         </Card>
       </div>
