@@ -38,7 +38,13 @@ export const DashboardEndpoint = async (req: PayloadRequest) => {
   // const dollarQuote = coinQuotes.[coin].brl / coinQuotes.[coin].usd
   // coinQuotes.[coin] = {
   //   usd: target,
-  //   brl: target * 5.68,
+  //   brl: target * dollarQuote,
+  // }
+  // const target = 13
+  // const dollarQuote = coinQuotes.uniswap.brl / coinQuotes.uniswap.usd
+  // coinQuotes.uniswap = {
+  //   usd: target,
+  //   brl: target * dollarQuote,
   // }
 
   const sumBRLIn = Number(querySumBRLIn[0].result)
@@ -108,6 +114,42 @@ export const DashboardEndpoint = async (req: PayloadRequest) => {
 
   // -----
 
+  const walletPOL = Wallets.find((item) => item.coin === 4)
+
+  const balancePOL = Number(walletPOL?.amount) * coinQuotes['matic-network'].brl
+
+  const investmentPOL = await getInvestmentSummaryByCoin({ coinId: 4, req })
+
+  const POLbyBRL = investmentPOL.find((item) => item.coinName === 'brl')
+
+  const netInvestPOL = POLbyBRL?.netInvestment as number
+
+  // -----
+
+  const walletDOT = Wallets.find((item) => item.coin === 10)
+
+  const balanceDOT = Number(walletDOT?.amount) * coinQuotes.polkadot.brl
+
+  const investmentDOT = await getInvestmentSummaryByCoin({ coinId: 10, req })
+
+  const DOTbyBRL = investmentDOT.find((item) => item.coinName === 'brl')
+
+  const netInvestDOT = DOTbyBRL?.netInvestment as number
+
+  // -----
+
+  const walletUNI = Wallets.find((item) => item.coin === 5)
+
+  const balanceUNI = Number(walletUNI?.amount) * coinQuotes.uniswap.brl
+
+  const investmentUNI = await getInvestmentSummaryByCoin({ coinId: 5, req })
+
+  const UNIbyBRL = investmentUNI.find((item) => item.coinName === 'brl')
+
+  const netInvestUNI = UNIbyBRL?.netInvestment as number
+
+  // -----
+
   const output: IDashEndpoint = {
     total: {
       investing: sumBRLIn,
@@ -157,6 +199,47 @@ export const DashboardEndpoint = async (req: PayloadRequest) => {
           hasProfit: balanceSOL > netInvestSOL,
           percentage: parseInt(String((balanceSOL / netInvestSOL) * 100)),
         },
+      },
+      {
+        name: 'Polygon',
+        symbol: 'POL',
+        color: 'bg-purple-500',
+        price: coinQuotes['matic-network'].usd,
+        targetPrice: 0.38,
+        hold: Number(walletPOL?.amount),
+        balance: balancePOL,
+        investing: netInvestPOL,
+        profit: {
+          value: balancePOL - netInvestPOL,
+          hasProfit: balancePOL > netInvestPOL,
+          percentage: parseInt(String((balancePOL / netInvestPOL) * 100)),
+        },
+      },
+      {
+        name: 'Uniswap',
+        symbol: 'UNI',
+        color: 'bg-fuchsia-400',
+        price: coinQuotes.uniswap.usd,
+        targetPrice: 13,
+        hold: Number(walletUNI?.amount),
+        balance: balanceUNI,
+        investing: netInvestUNI,
+        profit: {
+          value: balanceUNI - netInvestUNI,
+          hasProfit: balanceUNI > netInvestUNI,
+          percentage: parseInt(String((balanceUNI / netInvestUNI) * 100)),
+        },
+      },
+      {
+        name: 'Polkadot',
+        symbol: 'DOT',
+        color: 'bg-pink-400',
+        price: coinQuotes.polkadot.usd,
+        // targetPrice: 0.38,
+        hold: Number(walletDOT?.amount),
+        balance: balanceDOT,
+        investing: netInvestDOT,
+        profit: null,
       },
       {
         name: 'Aave',
