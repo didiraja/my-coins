@@ -4,7 +4,7 @@ export type AmountByCoin = {
   aave: number
 }
 
-type Profit = {
+type Profit = null | {
   value: number
   hasProfit: boolean
   percentage: number
