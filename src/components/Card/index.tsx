@@ -1,5 +1,6 @@
 'use client'
 
+import { profitClassName } from '@/libs/utils'
 import { ReactNode } from 'react'
 
 const Card = ({
@@ -19,16 +20,11 @@ const Card = ({
     <div className="card">
       <p className="label">{label}</p>
       <p
-        className={`value flex justify-between items-baseline ${performance ? (hasProfit ? 'text-green-500' : 'text-red-500') : ''}`}
+        className={`value flex justify-between items-baseline ${performance ? profitClassName(hasProfit) : ''}`}
       >
         {children}
-        {reference && (
-          <>
-            {' '}
-            <span className="text-sm">{reference}</span>
-          </>
-        )}
       </p>
+      {reference}
     </div>
   )
 }

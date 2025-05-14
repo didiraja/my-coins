@@ -4,6 +4,7 @@ import { formatBRL, formatUSD } from '@/libs/format'
 import Card from '../Card'
 import { Portfolio } from '@/types'
 import TargetPrice from '../Slot/Reference'
+import { profitClassName } from '@/libs/utils'
 
 const CoinPortfolio = ({ color = 'bg-gray-400', data }: { color: string; data: Portfolio }) => {
   return (
@@ -21,7 +22,16 @@ const CoinPortfolio = ({ color = 'bg-gray-400', data }: { color: string; data: P
       <div className="wallet-data">
         <Card
           label="Token Price"
-          reference={<TargetPrice value={data.targetPrice ? formatUSD(data.targetPrice) : false} />}
+          reference={
+            data.targetPrice ? (
+              <div className="reference">
+                <p>Target:</p>
+                <TargetPrice>{formatUSD(data.targetPrice)}</TargetPrice>
+              </div>
+            ) : (
+              false
+            )
+          }
         >
           {formatUSD(data.price)}
         </Card>
@@ -30,7 +40,14 @@ const CoinPortfolio = ({ color = 'bg-gray-400', data }: { color: string; data: P
           label="Profit"
           performance
           hasProfit={data.profit.hasProfit}
-          reference={`+${data.profit.percentage}%`}
+          reference={
+            <div className="reference">
+              <p>Profit:</p>
+              <TargetPrice className={profitClassName(data.profit.hasProfit)}>
+                +${data.profit.percentage}%
+              </TargetPrice>
+            </div>
+          }
         >
           {formatBRL(data.profit.value)}
         </Card>

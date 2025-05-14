@@ -1,13 +1,12 @@
 import { ReactNode } from 'react'
 
 type Props = {
-  value: string | false
+  children: ReactNode
+  className?: string
 }
 
-const TargetPrice = ({ value }: Props): ReactNode | false => {
-  if (!value) return false
-
-  return <span className="font-medium">{value}</span>
+const TargetPrice = ({ children, className }: Props) => {
+  return <p className={`text-xs ${className}`}>{children}</p>
 }
 
 export default TargetPrice
