@@ -2,7 +2,7 @@ import { getPayload } from 'payload'
 import React from 'react'
 import config from '@/payload.config'
 import { Coin } from '@/payload-types'
-import { formatBRL, formatUSD, showReadableDate } from '@/libs/format'
+import { formatBRL, formatGenericAmount, formatUSD, showReadableDate } from '@/libs/format'
 import { GetDashValues } from '@/libs/request'
 import Card from '@/components/Card'
 import CoinPortfolio from '@/components/CoinPortfolio'
@@ -18,30 +18,28 @@ export default async function HomePage() {
   const tradesList = await payload.find({
     collection: 'trade',
     sort: '-tradeDate',
+    limit: 99
   })
 
-  const dashValues = await GetDashValues()
-
-  // if (typeof window !== 'undefined') {
-  //   console.log(dashValues)
-  // }
+  if (typeof window !== 'undefined') {
+    console.log(tradesList)
+  }
 
   return (
     <div className="home">
       <div className="title">
-        <h1>My Coins</h1>
+        <h1>Trades</h1>
       </div>
-      {dashValues &&
-        dashValues?.portfolio?.map((item) => (
-          <CoinPortfolio key={item.symbol} color={item.color} data={item} />
-        ))}
       <div className="list">
         <ul>
           {tradesList.docs.map((trade) => {
             return (
               <li key={trade.id}>
-                {showReadableDate(trade.tradeDate)} - {(trade.coinIn as Coin).coin}:{' '}
-                {trade.amountIn} - {(trade.coinOut as Coin).coin}: {trade.amountOut}
+                <p className='leading-8'>
+                  <span className='text-xs'>{showReadableDate(trade.tradeDate)}</span>{' '}
+                  <span className='font-bold uppercase'>{(trade.coinIn as Coin).coin}:</span>{' '}{formatGenericAmount(trade.amountIn)}{' > '}
+                  <span className='font-bold uppercase'>{(trade.coinOut as Coin).coin}:</span>{' '}{formatGenericAmount(trade.amountOut)}
+                </p>
               </li>
             )
           })}

@@ -4,16 +4,23 @@ export const showReadableDate = (dateTime: string) => {
   return format(dateTime, 'dd/MM/yy')
 }
 
-export const formatBRL = (number: number) => {
+export const formatBRL = (amount: number) => {
   return new Intl.NumberFormat('pt-BR', {
     style: 'currency',
     currency: 'BRL',
-  }).format(number)
+  }).format(amount)
 }
 
-export const formatUSD = (number: number) => {
+export const formatUSD = (amount: number) => {
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
-  }).format(number)
+  }).format(amount)
+}
+
+export const formatGenericAmount = (amount: number) => {
+  return new Intl.NumberFormat('pt-BR', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(amount)
 }

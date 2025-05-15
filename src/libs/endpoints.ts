@@ -66,7 +66,7 @@ export const DashboardEndpoint = async (req: PayloadRequest) => {
 
   const netInvestBTC =
     (BTCbyBRL?.netInvestment as number) +
-    (BTCbyUSDC?.netInvestment as number) * coinQuotes['usd-coin'].brl
+    ((BTCbyUSDC?.netInvestment as number) * coinQuotes['usd-coin'].brl)
 
   // -----
 

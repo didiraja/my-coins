@@ -54,7 +54,19 @@ const CoinPortfolio = ({ color = 'bg-gray-400', data }: { color: string; data: P
           </Card>
         )}
 
-        <Card label="Balance" performance={Boolean(data.profit)} hasProfit={data.profit?.hasProfit}>
+        <Card
+          label="Balance"
+          performance={Boolean(data.profit)}
+          hasProfit={data.profit?.hasProfit}
+          // reference={
+          //   <div className="reference">
+          //     <p>Invested:</p>
+          //     <TargetPrice>
+          //       {data.profit?.percentage}
+          //     </TargetPrice>
+          //   </div>
+          // }
+        >
           {formatBRL(data.balance)}
         </Card>
       </div>
