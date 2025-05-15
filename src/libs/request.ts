@@ -22,7 +22,7 @@ export const GetCoinsQuotes = async () => {
 export const GetDashValues = async () => {
   try {
     const response: AxiosResponse<IDashEndpoint> = await axios.get(
-      `${process.env.VERCEL_ENV === 'production' ? 'https://my-coins-vert.vercel.app/' : 'http://localhost:3000'}/api/dashboard`,
+      `${process.env.VERCEL_ENV === 'production' ? 'https://my-coins-vert.vercel.app/' : 'http://localhost:3001'}/api/dashboard`,
       {
         headers: {
           'x-secret-token': process.env.PAYLOAD_SECRET,
