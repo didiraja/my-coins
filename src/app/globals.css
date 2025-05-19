@@ -4,6 +4,10 @@ html, body {
   @apply h-[100%] bg-slate-900 text-white p-4 text-base leading-none;
 }
 
+main {
+  @apply pb-4;
+}
+
 h1 {
   @apply text-3xl font-bold mb-4;
 }
