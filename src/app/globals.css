@@ -8,8 +8,12 @@ h1 {
   @apply text-3xl font-bold mb-4;
 }
 
+nav {
+  @apply flex gap-2 mb-5;
+}
+
 .link {
-  @apply bg-slate-700 rounded-md py-2 px-3;
+  @apply bg-slate-700 rounded-sm py-2 px-3;
 }
 
 .title {

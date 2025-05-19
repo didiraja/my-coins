@@ -35,18 +35,6 @@ export default async function HomePage() {
         dashValues?.portfolio?.map((item) => (
           <CoinPortfolio key={item.symbol} color={item.color} data={item} />
         ))}
-      <div className="list">
-        <ul>
-          {tradesList.docs.map((trade) => {
-            return (
-              <li key={trade.id}>
-                {showReadableDate(trade.tradeDate)} - {(trade.coinIn as Coin).coin}:{' '}
-                {trade.amountIn} - {(trade.coinOut as Coin).coin}: {trade.amountOut}
-              </li>
-            )
-          })}
-        </ul>
-      </div>
       <div className="footer"></div>
     </div>
   )
