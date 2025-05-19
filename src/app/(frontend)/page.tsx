@@ -1,25 +1,13 @@
-import { getPayload } from 'payload'
 import React from 'react'
-import config from '@/payload.config'
-import { Coin } from '@/payload-types'
-import { formatBRL, formatUSD, showReadableDate } from '@/libs/format'
 import { GetDashValues } from '@/libs/request'
-import Card from '@/components/Card'
 import CoinPortfolio from '@/components/CoinPortfolio'
+import Card from '@/components/Card'
 
 export const dynamic = 'force-dynamic'
 
 export const revalidate = 0
 
 export default async function HomePage() {
-  const payloadConfig = await config
-  const payload = await getPayload({ config: payloadConfig })
-
-  const tradesList = await payload.find({
-    collection: 'trade',
-    sort: '-tradeDate',
-  })
-
   const dashValues = await GetDashValues()
 
   // if (typeof window !== 'undefined') {
@@ -31,6 +19,11 @@ export default async function HomePage() {
       <div className="title">
         <h1>My Coins</h1>
       </div>
+      {!dashValues && (
+        <Card className="bg-red-950! border-red-900!" label="Something went wrong">
+          Couldn&apos;t fetch portfolio data.
+        </Card>
+      )}
       {dashValues &&
         dashValues?.portfolio?.map((item) => (
           <CoinPortfolio key={item.symbol} color={item.color} data={item} />

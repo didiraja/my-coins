@@ -9,15 +9,17 @@ const Card = ({
   performance = false,
   hasProfit = false,
   reference,
+  className,
 }: {
   label: string
   children: string | number
+  className?: string
   hasProfit?: boolean
   performance?: boolean
   reference?: string | ReactNode
 }) => {
   return (
-    <div className="card">
+    <div className={`card ${className}`}>
       <p className="label">{label}</p>
       <p
         className={`value flex justify-between items-baseline ${performance ? profitClassName(hasProfit) : ''}`}
