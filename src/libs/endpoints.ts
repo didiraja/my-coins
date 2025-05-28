@@ -4,6 +4,7 @@ import { trade, wallet } from '@/payload-generated-schema'
 import { GetCoinsQuotes } from './request'
 import { IDashEndpoint } from '@/types'
 import { getInvestmentSummaryByCoin } from './queries/getInvestmentSummaryByCoin'
+import { formatProfitRate } from './format'
 
 export const DashboardEndpoint = async (req: PayloadRequest) => {
   const secretToken = req.headers.get('x-secret-token')
@@ -66,7 +67,7 @@ export const DashboardEndpoint = async (req: PayloadRequest) => {
 
   const netInvestBTC =
     (BTCbyBRL?.netInvestment as number) +
-    ((BTCbyUSDC?.netInvestment as number) * coinQuotes['usd-coin'].brl)
+    (BTCbyUSDC?.netInvestment as number) * coinQuotes['usd-coin'].brl
 
   // -----
 
@@ -167,7 +168,7 @@ export const DashboardEndpoint = async (req: PayloadRequest) => {
         profit: {
           value: balanceBTC - netInvestBTC,
           hasProfit: balanceBTC > netInvestBTC,
-          percentage: parseInt(String((balanceBTC / netInvestBTC) * 100)),
+          percentage: formatProfitRate({ invested: netInvestBTC, balance: balanceBTC }),
         },
       },
       {
@@ -182,7 +183,7 @@ export const DashboardEndpoint = async (req: PayloadRequest) => {
         profit: {
           value: balanceETH - netInvestETH,
           hasProfit: balanceETH > netInvestETH,
-          percentage: parseInt(String((balanceETH / netInvestETH) * 100)),
+          percentage: formatProfitRate({ invested: netInvestETH, balance: balanceETH }),
         },
       },
       {
@@ -197,7 +198,7 @@ export const DashboardEndpoint = async (req: PayloadRequest) => {
         profit: {
           value: balanceSOL - netInvestSOL,
           hasProfit: balanceSOL > netInvestSOL,
-          percentage: parseInt(String((balanceSOL / netInvestSOL) * 100)),
+          percentage: formatProfitRate({ invested: netInvestSOL, balance: balanceSOL }),
         },
       },
       {
@@ -212,7 +213,7 @@ export const DashboardEndpoint = async (req: PayloadRequest) => {
         profit: {
           value: balancePOL - netInvestPOL,
           hasProfit: balancePOL > netInvestPOL,
-          percentage: parseInt(String((balancePOL / netInvestPOL) * 100)),
+          percentage: formatProfitRate({ invested: netInvestPOL, balance: balancePOL }),
         },
       },
       {
@@ -227,7 +228,7 @@ export const DashboardEndpoint = async (req: PayloadRequest) => {
         profit: {
           value: balanceUNI - netInvestUNI,
           hasProfit: balanceUNI > netInvestUNI,
-          percentage: parseInt(String((balanceUNI / netInvestUNI) * 100)),
+          percentage: formatProfitRate({ invested: netInvestUNI, balance: balanceUNI }),
         },
       },
       {
@@ -239,7 +240,11 @@ export const DashboardEndpoint = async (req: PayloadRequest) => {
         hold: Number(walletDOT?.amount),
         balance: balanceDOT,
         investing: netInvestDOT,
-        profit: null,
+        profit: {
+          value: balanceDOT - netInvestDOT,
+          hasProfit: balanceDOT > netInvestDOT,
+          percentage: formatProfitRate({ invested: netInvestDOT, balance: balanceDOT }),
+        },
       },
       {
         name: 'Aave',
@@ -253,7 +258,7 @@ export const DashboardEndpoint = async (req: PayloadRequest) => {
         profit: {
           value: balanceAAVE - netInvestAAVE,
           hasProfit: balanceAAVE > netInvestAAVE,
-          percentage: parseInt(String((balanceAAVE / netInvestAAVE) * 100)),
+          percentage: formatProfitRate({ invested: netInvestAAVE, balance: balanceAAVE }),
         },
       },
     ],
