@@ -41,9 +41,9 @@ export const DashboardEndpoint = async (req: PayloadRequest) => {
   //   usd: target,
   //   brl: target * dollarQuote,
   // }
-  // const target = 13
-  // const dollarQuote = coinQuotes.uniswap.brl / coinQuotes.uniswap.usd
-  // coinQuotes.uniswap = {
+  // const target = 26
+  // const dollarQuote = coinQuotes.link.brl / coinQuotes.link.usd
+  // coinQuotes.link = {
   //   usd: target,
   //   brl: target * dollarQuote,
   // }
@@ -148,6 +148,18 @@ export const DashboardEndpoint = async (req: PayloadRequest) => {
   const UNIbyBRL = investmentUNI.find((item) => item.coinName === 'brl')
 
   const netInvestUNI = UNIbyBRL?.netInvestment as number
+
+  // -----
+
+  const walletLINK = Wallets.find((item) => item.coin === 6)
+
+  const balanceLINK = Number(walletLINK?.amount) * coinQuotes.link.brl
+
+  const investmentLINK = await getInvestmentSummaryByCoin({ coinId: 6, req })
+
+  const LINKbyBRL = investmentLINK.find((item) => item.coinName === 'brl')
+
+  const netInvestLINK = LINKbyBRL?.netInvestment as number
 
   // -----
 
@@ -259,6 +271,21 @@ export const DashboardEndpoint = async (req: PayloadRequest) => {
           value: balanceAAVE - netInvestAAVE,
           hasProfit: balanceAAVE > netInvestAAVE,
           percentage: formatProfitRate({ invested: netInvestAAVE, balance: balanceAAVE }),
+        },
+      },
+      {
+        name: 'Link',
+        symbol: 'LINK',
+        color: 'bg-blue-600',
+        price: coinQuotes.link.usd,
+        targetPrice: 26,
+        hold: Number(walletLINK?.amount),
+        balance: balanceLINK,
+        investing: netInvestLINK,
+        profit: {
+          value: balanceLINK - netInvestLINK,
+          hasProfit: balanceLINK > netInvestLINK,
+          percentage: formatProfitRate({ invested: netInvestLINK, balance: balanceLINK }),
         },
       },
     ],
