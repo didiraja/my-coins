@@ -43,9 +43,9 @@ const CoinPortfolio = ({ color = 'bg-gray-400', data }: { color: string; data: P
             hasProfit={data.profit?.hasProfit}
             reference={
               <div className="reference">
-                <p>Profit:</p>
+                <p>Pct:</p>
                 <TargetPrice className={profitClassName(data.profit?.hasProfit)}>
-                  +${data.profit?.percentage}%
+                  {data.profit?.percentage}%
                 </TargetPrice>
               </div>
             }
@@ -58,14 +58,12 @@ const CoinPortfolio = ({ color = 'bg-gray-400', data }: { color: string; data: P
           label="Balance"
           performance={Boolean(data.profit)}
           hasProfit={data.profit?.hasProfit}
-          // reference={
-          //   <div className="reference">
-          //     <p>Invested:</p>
-          //     <TargetPrice>
-          //       {data.profit?.percentage}
-          //     </TargetPrice>
-          //   </div>
-          // }
+          reference={
+            <div className="reference">
+              <p>Entry:</p>
+              <TargetPrice>{formatBRL(Number(data.investing.toFixed(2)))}</TargetPrice>
+            </div>
+          }
         >
           {formatBRL(data.balance)}
         </Card>
