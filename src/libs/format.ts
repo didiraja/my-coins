@@ -24,3 +24,9 @@ export const formatGenericAmount = (amount: number) => {
     maximumFractionDigits: 2,
   }).format(amount)
 }
+
+export const formatProfitRate = ({ invested, balance }: { invested: number; balance: number }) => {
+  if (!invested || balance === invested) return 0
+
+  return Math.floor(((balance - invested) / invested) * 100)
+}
