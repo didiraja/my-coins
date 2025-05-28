@@ -21,7 +21,7 @@ export const formatUSD = (amount: number) => {
 export const formatGenericAmount = (amount: number) => {
   return new Intl.NumberFormat('pt-BR', {
     minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
+    maximumFractionDigits: 4,
   }).format(amount)
 }
 
