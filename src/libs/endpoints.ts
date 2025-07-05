@@ -1,6 +1,6 @@
 import { PayloadRequest } from 'payload'
 import { eq, sum } from '@payloadcms/db-sqlite/drizzle'
-import { trade, wallet } from '@/payload-generated-schema'
+import { trade } from '@/payload-generated-schema'
 import { GetCoinsQuotes } from './request'
 import { IDashEndpoint } from '@/types'
 import { getInvestmentSummaryByCoin } from './queries/getInvestmentSummaryByCoin'
@@ -54,8 +54,6 @@ export const DashboardEndpoint = async (req: PayloadRequest) => {
 
   const totalInvestingNet = sumBRLIn - sumBRLOut
 
-  const Wallets = await req.payload.db.drizzle.select().from(wallet)
-
   const walletBTC = await getHoldByCoin({ coinId: 1, req })
 
   const balanceBTC = Number(walletBTC?.totalHold) * coinQuotes.bitcoin.brl
@@ -72,9 +70,9 @@ export const DashboardEndpoint = async (req: PayloadRequest) => {
 
   // -----
 
-  const walletETH = Wallets.find((item) => item.coin === 2)
+  const walletETH = await getHoldByCoin({ coinId: 2, req })
 
-  const balanceETH = Number(walletETH?.amount) * coinQuotes.ethereum.brl
+  const balanceETH = Number(walletETH?.totalHold) * coinQuotes.ethereum.brl
 
   const investmentETH = await getInvestmentSummaryByCoin({ coinId: 2, req })
 
@@ -88,9 +86,9 @@ export const DashboardEndpoint = async (req: PayloadRequest) => {
 
   // -----
 
-  const walletSOL = Wallets.find((item) => item.coin === 3)
+  const walletSOL = await getHoldByCoin({ coinId: 3, req })
 
-  const balanceSOL = Number(walletSOL?.amount) * coinQuotes.solana.brl
+  const balanceSOL = Number(walletSOL?.totalHold) * coinQuotes.solana.brl
 
   const investmentSOL = await getInvestmentSummaryByCoin({ coinId: 3, req })
 
@@ -104,9 +102,9 @@ export const DashboardEndpoint = async (req: PayloadRequest) => {
 
   // -----
 
-  const walletAAVE = Wallets.find((item) => item.coin === 7)
+  const walletAAVE = await getHoldByCoin({ coinId: 7, req })
 
-  const balanceAAVE = Number(walletAAVE?.amount) * coinQuotes.aave.brl
+  const balanceAAVE = Number(walletAAVE?.totalHold) * coinQuotes.aave.brl
 
   const investmentAAVE = await getInvestmentSummaryByCoin({ coinId: 7, req })
 
@@ -116,9 +114,9 @@ export const DashboardEndpoint = async (req: PayloadRequest) => {
 
   // -----
 
-  const walletPOL = Wallets.find((item) => item.coin === 4)
+  const walletPOL = await getHoldByCoin({ coinId: 4, req })
 
-  const balancePOL = Number(walletPOL?.amount) * coinQuotes['matic-network'].brl
+  const balancePOL = Number(walletPOL?.totalHold) * coinQuotes['matic-network'].brl
 
   const investmentPOL = await getInvestmentSummaryByCoin({ coinId: 4, req })
 
@@ -128,9 +126,9 @@ export const DashboardEndpoint = async (req: PayloadRequest) => {
 
   // -----
 
-  const walletDOT = Wallets.find((item) => item.coin === 10)
+  const walletDOT = await getHoldByCoin({ coinId: 10, req })
 
-  const balanceDOT = Number(walletDOT?.amount) * coinQuotes.polkadot.brl
+  const balanceDOT = Number(walletDOT?.totalHold) * coinQuotes.polkadot.brl
 
   const investmentDOT = await getInvestmentSummaryByCoin({ coinId: 10, req })
 
@@ -140,9 +138,9 @@ export const DashboardEndpoint = async (req: PayloadRequest) => {
 
   // -----
 
-  const walletUNI = Wallets.find((item) => item.coin === 5)
+  const walletUNI = await getHoldByCoin({ coinId: 5, req })
 
-  const balanceUNI = Number(walletUNI?.amount) * coinQuotes.uniswap.brl
+  const balanceUNI = Number(walletUNI?.totalHold) * coinQuotes.uniswap.brl
 
   const investmentUNI = await getInvestmentSummaryByCoin({ coinId: 5, req })
 
@@ -152,9 +150,9 @@ export const DashboardEndpoint = async (req: PayloadRequest) => {
 
   // -----
 
-  const walletLINK = Wallets.find((item) => item.coin === 6)
+  const walletLINK = await getHoldByCoin({ coinId: 6, req })
 
-  const balanceLINK = Number(walletLINK?.amount) * coinQuotes.link.brl
+  const balanceLINK = Number(walletLINK?.totalHold) * coinQuotes.link.brl
 
   const investmentLINK = await getInvestmentSummaryByCoin({ coinId: 6, req })
 
@@ -190,7 +188,7 @@ export const DashboardEndpoint = async (req: PayloadRequest) => {
         color: 'bg-blue-400',
         price: coinQuotes.ethereum.usd,
         targetPrice: 2700,
-        hold: Number(walletETH?.amount),
+        hold: Number(walletETH?.totalHold),
         balance: balanceETH,
         investing: netInvestETH,
         profit: {
@@ -205,7 +203,7 @@ export const DashboardEndpoint = async (req: PayloadRequest) => {
         color: 'bg-indigo-400',
         price: coinQuotes.solana.usd,
         targetPrice: 170,
-        hold: Number(walletSOL?.amount),
+        hold: Number(walletSOL?.totalHold),
         balance: balanceSOL,
         investing: netInvestSOL,
         profit: {
@@ -220,7 +218,7 @@ export const DashboardEndpoint = async (req: PayloadRequest) => {
         color: 'bg-purple-500',
         price: coinQuotes['matic-network'].usd,
         targetPrice: 0.38,
-        hold: Number(walletPOL?.amount),
+        hold: Number(walletPOL?.totalHold),
         balance: balancePOL,
         investing: netInvestPOL,
         profit: {
@@ -235,7 +233,7 @@ export const DashboardEndpoint = async (req: PayloadRequest) => {
         color: 'bg-fuchsia-400',
         price: coinQuotes.uniswap.usd,
         targetPrice: 13,
-        hold: Number(walletUNI?.amount),
+        hold: Number(walletUNI?.totalHold),
         balance: balanceUNI,
         investing: netInvestUNI,
         profit: {
@@ -250,7 +248,7 @@ export const DashboardEndpoint = async (req: PayloadRequest) => {
         color: 'bg-pink-400',
         price: coinQuotes.polkadot.usd,
         // targetPrice: 0.38,
-        hold: Number(walletDOT?.amount),
+        hold: Number(walletDOT?.totalHold),
         balance: balanceDOT,
         investing: netInvestDOT,
         profit: {
@@ -265,7 +263,7 @@ export const DashboardEndpoint = async (req: PayloadRequest) => {
         color: 'bg-teal-400',
         price: coinQuotes.aave.usd,
         targetPrice: 310,
-        hold: Number(walletAAVE?.amount),
+        hold: Number(walletAAVE?.totalHold),
         balance: balanceAAVE,
         investing: netInvestAAVE,
         profit: {
@@ -280,7 +278,7 @@ export const DashboardEndpoint = async (req: PayloadRequest) => {
         color: 'bg-blue-600',
         price: coinQuotes.link.usd,
         targetPrice: 26,
-        hold: Number(walletLINK?.amount),
+        hold: Number(walletLINK?.totalHold),
         balance: balanceLINK,
         investing: netInvestLINK,
         profit: {
