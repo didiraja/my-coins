@@ -1,13 +1,8 @@
 import { coin, trade } from '@/payload-generated-schema'
+import { QueryProps } from '@/types'
 import { sql } from '@payloadcms/db-sqlite'
-import { PayloadRequest } from 'payload'
 
-type Props = {
-  coinId: number
-  req: PayloadRequest
-}
-
-export const getInvestmentSummaryByCoin = async ({ coinId, req }: Props) => {
+export const getInvestmentSummaryByCoin = async ({ coinId, req }: QueryProps) => {
   const caseTotalInvested = sql<number>`CASE WHEN ${trade.coinOut} = ${coinId} THEN ${trade.amountIn} ELSE 0 END`
 
   const caseTotalWithdrawn = sql<number>`CASE WHEN ${trade.coinIn} = ${coinId} THEN ${trade.amountOut} ELSE 0 END`

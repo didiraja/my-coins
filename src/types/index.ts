@@ -1,7 +1,8 @@
-export type AmountByCoin = {
-  btc: number
-  sol: number
-  aave: number
+import { PayloadRequest } from 'payload'
+
+export type QueryProps = {
+  coinId: number
+  req: PayloadRequest
 }
 
 type Profit = null | {

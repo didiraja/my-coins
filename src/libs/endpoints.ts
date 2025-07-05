@@ -5,6 +5,7 @@ import { GetCoinsQuotes } from './request'
 import { IDashEndpoint } from '@/types'
 import { getInvestmentSummaryByCoin } from './queries/getInvestmentSummaryByCoin'
 import { formatProfitRate } from './format'
+import { getHoldByCoin } from './queries/getHoldByCoin'
 
 export const DashboardEndpoint = async (req: PayloadRequest) => {
   const secretToken = req.headers.get('x-secret-token')
@@ -55,9 +56,9 @@ export const DashboardEndpoint = async (req: PayloadRequest) => {
 
   const Wallets = await req.payload.db.drizzle.select().from(wallet)
 
-  const walletBTC = Wallets.find((item) => item.coin === 1)
+  const walletBTC = await getHoldByCoin({ coinId: 1, req })
 
-  const balanceBTC = Number(walletBTC?.amount) * coinQuotes.bitcoin.brl
+  const balanceBTC = Number(walletBTC?.totalHold) * coinQuotes.bitcoin.brl
 
   const investmentBTC = await getInvestmentSummaryByCoin({ coinId: 1, req })
 
@@ -174,7 +175,7 @@ export const DashboardEndpoint = async (req: PayloadRequest) => {
         symbol: 'BTC',
         color: 'bg-orange-400',
         price: coinQuotes.bitcoin.usd,
-        hold: Number(walletBTC?.amount),
+        hold: Number(walletBTC?.totalHold),
         balance: balanceBTC,
         investing: netInvestBTC,
         profit: {
