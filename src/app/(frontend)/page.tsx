@@ -2,16 +2,21 @@ import React from 'react'
 import { GetDashValues } from '@/libs/request'
 import CoinPortfolio from '@/components/CoinPortfolio'
 import Card from '@/components/Card'
+// import { cookies } from 'next/headers'
 
 export const dynamic = 'force-dynamic'
 
 export const revalidate = 0
 
 export default async function HomePage() {
+  // const cookieStore = await cookies()
+
+  // console.log('value', cookieStore.get('payload-token'))
+
   const dashValues = await GetDashValues()
 
   // if (typeof window !== 'undefined') {
-  //   console.log(dashValues)
+  // console.log(dashValues)
   // }
 
   return (
