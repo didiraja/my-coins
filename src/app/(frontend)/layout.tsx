@@ -3,6 +3,7 @@ import '@/app/globals.css'
 import Link from 'next/link'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
+import { validatePayloadToken } from '@/libs/utils'
 
 export const metadata = {
   title: 'My Coins Dashboard',
@@ -10,10 +11,9 @@ export const metadata = {
 
 export default async function RootLayout(props: { children: React.ReactNode }) {
   const cookieStore = await cookies()
+  const payloadToken = cookieStore.get('payload-token')
 
-  // console.log('value', cookieStore.get('payload-token'))
-
-  if (!cookieStore.get('payload-token')) {
+  if (!payloadToken || !validatePayloadToken(payloadToken.value)) {
     redirect('/admin/login')
   }
 
