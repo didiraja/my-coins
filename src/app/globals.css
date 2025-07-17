@@ -68,6 +68,10 @@ nav {
   @apply flex justify-between text-[0.9rem] border-t border-slate-600 pt-1 mt-1;
 }
 
+.button {
+  @apply bg-white text-black leading-normal py-2 px-8;
+}
+
 @media (min-width: 1200px) {
   .wallet-data {
     @apply grid-cols-4;
