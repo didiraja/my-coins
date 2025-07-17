@@ -59,3 +59,27 @@ export const DoLogin = async () => {
     console.log(error)
   }
 }
+
+export const Logout = async () => {
+  try {
+    const response: AxiosResponse<IDashEndpoint> = await axios.post(
+      `${process.env.VERCEL_ENV === 'production' ? 'https://my-coins-vert.vercel.app/' : `http://localhost:3000`}/api/users/logout?allSessions=false`,
+    )
+
+    console.log(response)
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export const IsUserAuthenticated = async () => {
+  try {
+    const response = await axios.get(
+      `${process.env.VERCEL_ENV === 'production' ? 'https://my-coins-vert.vercel.app/' : `http://localhost:3000`}/api/users/me`,
+    )
+
+    return response.data
+  } catch (error) {
+    console.log(error)
+  }
+}

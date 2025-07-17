@@ -2,7 +2,7 @@
 
 import React from 'react'
 import { useRouter } from 'next/navigation'
-import { DoLogin } from '@/libs/request'
+import { DoLogin, Logout } from '@/libs/request'
 
 export default function Login() {
   const router = useRouter()
@@ -25,6 +25,10 @@ export default function Login() {
 
       <button className="button" onClick={TryLogin}>
         Login
+      </button>
+
+      <button className="button" onClick={Logout}>
+        Logout
       </button>
     </div>
   )
