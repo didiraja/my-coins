@@ -4,6 +4,10 @@ html, body {
   @apply h-[100%] bg-slate-900 text-white p-4 text-base leading-none;
 }
 
+body {
+  @apply max-w-md mx-auto;
+}
+
 main {
   @apply pb-4;
 }
