@@ -1,0 +1,32 @@
+@import "tailwindcss";
+
+.coin-wrapper {
+  @apply mb-4;
+
+  .coin-title {
+    @apply flex items-center gap-2 mb-4;
+    
+    .coin-icon {
+      @apply rounded-full w-8 h-8
+    }
+  
+    .label {
+      @apply text-3xl font-semibold;
+    }
+  }
+  
+  .wallet-data {
+    @apply grid grid-cols-2 gap-4 mb-5;
+  }
+}
+
+.reference {
+  @apply flex justify-between text-[0.9rem] border-t border-slate-600 pt-1 mt-1;
+}
+
+
+@media (min-width: 1200px) {
+  .wallet-data {
+    @apply grid-cols-4;
+  }
+}

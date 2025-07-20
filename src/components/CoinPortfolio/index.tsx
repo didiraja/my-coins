@@ -5,6 +5,7 @@ import Card from '../Card'
 import { Portfolio } from '@/types'
 import TargetPrice from '../Slot/Reference'
 import { profitClassName } from '@/libs/utils'
+import './style.scss'
 
 const CoinPortfolio = ({ color = 'bg-gray-400', data }: { color: string; data: Portfolio }) => {
   return (

@@ -2,6 +2,7 @@
 
 import { profitClassName } from '@/libs/utils'
 import { ReactNode } from 'react'
+import './style.scss'
 
 const Card = ({
   label,
@@ -19,13 +20,9 @@ const Card = ({
   reference?: string | ReactNode
 }) => {
   return (
-    <div className={`card ${className}`}>
+    <div className={`card ${className ?? ''}`}>
       <p className="label">{label}</p>
-      <p
-        className={`value flex justify-between items-baseline ${performance ? profitClassName(hasProfit) : ''}`}
-      >
-        {children}
-      </p>
+      <p className={`value ${performance ? profitClassName(hasProfit) : ''}`}>{children}</p>
       {reference}
     </div>
   )
