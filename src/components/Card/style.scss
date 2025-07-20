@@ -1,0 +1,13 @@
+@import "tailwindcss";
+
+.card {
+  @apply bg-slate-800 border border-slate-700 rounded-lg p-5;
+
+  .label {
+    @apply text-base;
+  }
+
+  .value {
+    @apply text-xl font-semibold;
+  }
+}
