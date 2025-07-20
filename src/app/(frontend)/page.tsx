@@ -25,9 +25,9 @@ export default async function HomePage() {
         </Card>
       )}
       {dashValues &&
-        dashValues?.portfolio?.map((item) => (
-          <CoinPortfolio key={item.symbol} color={item.color} data={item} />
-        ))}
+        dashValues?.portfolio
+          ?.sort((a, b) => Number(b.profit?.percentage) - Number(a.profit?.percentage))
+          .map((item) => <CoinPortfolio key={item.symbol} color={item.color} data={item} />)}
       <div className="footer"></div>
     </div>
   )
