@@ -24,6 +24,7 @@
     "cross-env": "^7.0.3",
     "date-fns": "^4.1.0",
     "graphql": "^16.8.1",
+    "jose": "^6.0.12",
     "next": "15.2.0",
     "payload": "latest",
     "postcss": "^8.5.3",
