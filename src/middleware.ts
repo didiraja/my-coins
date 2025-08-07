@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { decodePayloadToken } from '@/libs/session'
 
-const protectedRoutes = ['/dashboard', '/trades']
+const protectedRoutes = ['/', '/dashboard', '/trades']
 const publicRoutes = ['/login']
 
 export default async function middleware(req: NextRequest) {
