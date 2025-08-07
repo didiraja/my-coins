@@ -1,13 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { decodePayloadToken } from '@/libs/session'
 
-const protectedRoutes = ['/', '/trades']
-// const publicRoutes = ['/login']
+const protectedRoutes = ['/dashboard', '/trades']
+const publicRoutes = ['/login']
 
 export default async function middleware(req: NextRequest) {
   const path = req.nextUrl.pathname
   const isProtectedRoute = protectedRoutes.includes(path)
-  // const isPublicRoute = publicRoutes.includes(path)
+  const isPublicRoute = publicRoutes.includes(path)
 
   const cookie = req.cookies.get('payload-token')?.value
 
@@ -15,6 +15,11 @@ export default async function middleware(req: NextRequest) {
 
   if (isProtectedRoute && !decodedToken) {
     const loginUrl = new URL('/login', req.url)
+    return NextResponse.redirect(loginUrl)
+  }
+
+  if (isPublicRoute && decodedToken) {
+    const loginUrl = new URL('/dashboard', req.url)
     return NextResponse.redirect(loginUrl)
   }
 
