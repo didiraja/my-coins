@@ -1,6 +1,15 @@
 import { jwtVerify } from 'jose'
 
-export const decodePayloadToken = async (token: string): Promise<any | null> => {
+type PayloadToken = {
+  id: number
+  collection: string
+  email: string
+  sid: `${string}-${string}-${string}-${string}-${string}`
+  iat: number
+  exp: number
+}
+
+export const decodePayloadToken = async (token: string): Promise<PayloadToken | null> => {
   const secret = process.env.PAYLOAD_SECRET
   if (!secret || secret.length === 0) return null
 
@@ -17,7 +26,8 @@ export const decodePayloadToken = async (token: string): Promise<any | null> => 
     const key = encoder.encode(shortHash)
 
     const { payload } = await jwtVerify(token, key)
-    return payload
+
+    return payload as PayloadToken
   } catch (e) {
     console.error('Error decoding token:', e)
     return null

@@ -2,14 +2,7 @@ import { getPayload } from 'payload'
 import React from 'react'
 import config from '@/payload.config'
 import { Coin } from '@/payload-types'
-import { formatBRL, formatGenericAmount, formatUSD, showReadableDate } from '@/libs/format'
-import { GetDashValues } from '@/libs/request'
-import Card from '@/components/Card'
-import CoinPortfolio from '@/components/CoinPortfolio'
-
-export const dynamic = 'force-dynamic'
-
-export const revalidate = 0
+import { formatGenericAmount, showReadableDate } from '@/libs/format'
 
 export default async function TradesRoute() {
   const payloadConfig = await config
@@ -21,9 +14,9 @@ export default async function TradesRoute() {
     limit: 99,
   })
 
-  if (typeof window !== 'undefined') {
-    console.log(tradesList)
-  }
+  // if (typeof window !== 'undefined') {
+  //   console.log(tradesList)
+  // }
 
   return (
     <div className="trades">
