@@ -1,4 +1,5 @@
 import React from 'react'
+import NextTopLoader from 'nextjs-toploader'
 import Header from '@/components/Header'
 import '@/app/globals.css'
 
@@ -12,6 +13,7 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
   return (
     <html lang="pt-BR">
       <body>
+        <NextTopLoader />
         <Header />
         <main>{children}</main>
       </body>

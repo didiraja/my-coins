@@ -1,6 +1,6 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
+import { useRouter } from 'nextjs-toploader/app'
 import { logoutAction } from '@/actions/logout'
 
 export default function LogoutButton() {
@@ -13,7 +13,7 @@ export default function LogoutButton() {
   }
 
   return (
-    <button className="link" onClick={handleLogout}>
+    <button className="link cursor-pointer" onClick={handleLogout}>
       Logout
     </button>
   )

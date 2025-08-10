@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "build": "cross-env NODE_OPTIONS=--no-deprecation next build",
-    "dev": "cross-env NODE_OPTIONS=--no-deprecation next dev",
+    "dev": "cross-env NODE_OPTIONS=--no-deprecation next dev --turbopack",
     "devsafe": "rm -rf .next && cross-env NODE_OPTIONS=--no-deprecation next dev",
     "generate:types": "cross-env NODE_OPTIONS=--no-deprecation payload generate:types",
     "generate:db-schema": "cross-env NODE_OPTIONS=--no-deprecation payload generate:db-schema",
@@ -27,6 +27,7 @@
     "graphql": "^16.8.1",
     "jose": "^6.0.12",
     "next": "15.2.0",
+    "nextjs-toploader": "^3.8.16",
     "payload": "latest",
     "postcss": "^8.5.3",
     "react": "19.0.0",
