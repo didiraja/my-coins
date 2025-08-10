@@ -27,3 +27,7 @@ nav {
 .title {
   @apply flex items-baseline gap-2 mb-5;
 }
+
+.input-field {
+  @apply block border border-white rounded-md p-2;
+}
