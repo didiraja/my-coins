@@ -11,7 +11,7 @@ type PayloadToken = {
 
 export const decodePayloadToken = async (token: string): Promise<PayloadToken | null> => {
   const secret = process.env.PAYLOAD_SECRET
-  if (!secret || secret.length === 0) return null
+  if (!secret || token.split('.').length !== 3) return null
 
   try {
     const encoder = new TextEncoder()
@@ -28,8 +28,7 @@ export const decodePayloadToken = async (token: string): Promise<PayloadToken | 
     const { payload } = await jwtVerify(token, key)
 
     return payload as PayloadToken
-  } catch (e) {
-    console.error('Error decoding token:', e)
+  } catch {
     return null
   }
 }

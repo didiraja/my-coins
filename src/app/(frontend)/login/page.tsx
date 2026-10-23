@@ -7,10 +7,7 @@ export default function LoginRoute() {
   const router = useRouter()
 
   const handleLogin = async () => {
-    await loginAction({
-      email: 'didiraja@hotmail.com',
-      password: process.env.NEXT_PUBLIC_USER_PASS || '',
-    })
+    await loginAction()
 
     router.push('/')
   }

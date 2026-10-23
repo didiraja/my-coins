@@ -11,11 +11,13 @@ export default async function proxy(req: NextRequest) {
 
   const cookie = req.cookies.get('payload-token')?.value
 
-  const decodedToken = await decodePayloadToken(cookie || '')
+  const decodedToken = cookie ? await decodePayloadToken(cookie) : null
 
   if (isProtectedRoute && !decodedToken) {
     const loginUrl = new URL('/login', req.url)
-    return NextResponse.redirect(loginUrl)
+    const response = NextResponse.redirect(loginUrl)
+    if (cookie) response.cookies.delete('payload-token')
+    return response
   }
 
   if (isPublicRoute && decodedToken) {
@@ -23,5 +25,7 @@ export default async function proxy(req: NextRequest) {
     return NextResponse.redirect(loginUrl)
   }
 
-  return NextResponse.next()
+  const response = NextResponse.next()
+  if (cookie && !decodedToken) response.cookies.delete('payload-token')
+  return response
 }
