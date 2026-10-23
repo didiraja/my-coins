@@ -1,6 +1,3 @@
-'use client'
-
-import { profitClassName } from '@/libs/utils'
 import { ReactNode } from 'react'
 import './style.scss'
 
@@ -13,7 +10,7 @@ const Card = ({
   className,
 }: {
   label: string
-  children: string | number
+  children: ReactNode
   className?: string
   hasProfit?: boolean
   performance?: boolean
@@ -22,8 +19,10 @@ const Card = ({
   return (
     <div className={`card ${className ?? ''}`}>
       <p className="label">{label}</p>
-      <p className={`value ${performance ? profitClassName(hasProfit) : ''}`}>{children}</p>
-      {reference}
+      <p className={`value ${performance ? (hasProfit ? 'positive' : 'negative') : ''}`}>
+        {children}
+      </p>
+      {reference && <div className="reference">{reference}</div>}
     </div>
   )
 }

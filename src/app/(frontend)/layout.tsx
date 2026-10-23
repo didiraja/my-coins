@@ -19,10 +19,10 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
 
   return (
     <html lang="pt-BR">
-      <body>
+      <body className={isAuthenticated ? 'app-shell' : 'guest-shell'}>
         <NextTopLoader />
         {isAuthenticated && <Header />}
-        <main>{children}</main>
+        <main className="app-main">{children}</main>
       </body>
     </html>
   )

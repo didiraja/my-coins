@@ -1,76 +1,51 @@
-'use client'
-
-import { formatBRL, formatUSD } from '@/libs/format'
-import Card from '../Card'
+import { formatBRL, formatGenericAmount, formatUSD } from '@/libs/format'
 import { Portfolio } from '@/types'
-import TargetPrice from '../Slot/Reference'
-import { profitClassName } from '@/libs/utils'
 import './style.scss'
 
-const CoinPortfolio = ({ color = 'bg-gray-400', data }: { color: string; data: Portfolio }) => {
+export default function CoinPortfolio({ data, color }: { color: string; data: Portfolio }) {
+  const performance = data.profit
+  const isPositive = performance?.hasProfit ?? false
+
   return (
-    <div className="coin-wrapper">
-      <div className="coin-title">
-        <div className={`coin-icon ${color}`} />
-        <p className="label">
-          {data.name}{' '}
-          <span className="text-sm">
-            {data.symbol} {data.hold}
-          </span>
-        </p>
+    <div className="coin-row">
+      <div className="coin-identity">
+        <span className={`coin-icon ${color}`} aria-hidden="true">
+          {data.symbol.slice(0, 1)}
+        </span>
+        <div className="coin-name-group">
+          <span className="coin-name">{data.name}</span>
+          <span className="coin-symbol">{data.symbol}</span>
+        </div>
       </div>
-
-      <div className="wallet-data">
-        <Card
-          label="Token Price"
-          reference={
-            data.targetPrice ? (
-              <div className="reference">
-                <p>Target:</p>
-                <TargetPrice>{formatUSD(data.targetPrice)}</TargetPrice>
-              </div>
-            ) : (
-              false
-            )
-          }
-        >
-          {formatUSD(data.price)}
-        </Card>
-
-        {data.profit && (
-          <Card
-            label="Profit"
-            performance
-            hasProfit={data.profit?.hasProfit}
-            reference={
-              <div className="reference">
-                <p>Pct:</p>
-                <TargetPrice className={profitClassName(data.profit?.hasProfit)}>
-                  {data.profit?.percentage}%
-                </TargetPrice>
-              </div>
-            }
-          >
-            {formatBRL(data.profit?.value)}
-          </Card>
+      <div className="coin-cell coin-hold" data-label="Quantidade">
+        {formatGenericAmount(data.hold)} <span>{data.symbol}</span>
+      </div>
+      <div className="coin-cell coin-price" data-label="Preço">
+        {formatUSD(data.price)}
+        {data.targetPrice && <small>Meta {formatUSD(data.targetPrice)}</small>}
+      </div>
+      <div className="coin-cell coin-invested" data-label="Investido">
+        {formatBRL(data.investing)}
+      </div>
+      <div className="coin-cell coin-balance" data-label="Saldo">
+        {formatBRL(data.balance)}
+      </div>
+      <div className="coin-cell coin-performance" data-label="Resultado">
+        {performance ? (
+          <>
+            <span className={isPositive ? 'positive' : 'negative'}>
+              {isPositive ? '+' : ''}
+              {formatBRL(performance.value)}
+            </span>
+            <small className={isPositive ? 'positive' : 'negative'}>
+              {isPositive ? '+' : ''}
+              {performance.percentage}%
+            </small>
+          </>
+        ) : (
+          <span className="muted">—</span>
         )}
-
-        <Card
-          label="Balance"
-          performance={Boolean(data.profit)}
-          hasProfit={data.profit?.hasProfit}
-          reference={
-            <div className="reference">
-              <p>Entry:</p>
-              <TargetPrice>{formatBRL(Number(data.investing.toFixed(2)))}</TargetPrice>
-            </div>
-          }
-        >
-          {formatBRL(data.balance)}
-        </Card>
       </div>
     </div>
   )
 }
-
-export default CoinPortfolio

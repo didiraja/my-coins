@@ -1,13 +1,38 @@
-@import "tailwindcss";
-
 .card {
-  @apply bg-slate-800 border border-slate-700 rounded-lg p-5;
+  min-width: 0;
+  padding: 20px 22px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+}
 
-  .label {
-    @apply text-base;
-  }
+.card .label {
+  margin-bottom: 16px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 500;
+}
+.card .value {
+  color: var(--text);
+  font-size: clamp(20px, 2.1vw, 28px);
+  font-weight: 600;
+  letter-spacing: -0.035em;
+  font-variant-numeric: tabular-nums;
+}
+.card .value.positive {
+  color: var(--positive);
+}
+.card .value.negative {
+  color: var(--negative);
+}
+.card .reference {
+  margin-top: 10px;
+  color: var(--muted);
+  font-size: 11px;
+}
 
-  .value {
-    @apply text-xl font-semibold;
+@media (max-width: 700px) {
+  .card {
+    padding: 18px;
   }
 }
